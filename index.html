@@ -18,6 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/experience.css" />
 </head>
 <body>
 
@@ -58,11 +59,11 @@
       </button>
 
       <ul class="nav__links" id="navLinks">
-        <li><a href="#stats" class="nav__link">Stats</a></li>
+        <li><a href="#match" class="nav__link"><span class="live-dot"></span>Match</a></li>
+        <li><a href="#tactics" class="nav__link">Tactics</a></li>
         <li><a href="#players" class="nav__link">Players</a></li>
-        <li><a href="#results" class="nav__link">Results</a></li>
+        <li><a href="#dashboard" class="nav__link">Stats</a></li>
         <li><a href="#trophies" class="nav__link">Trophies</a></li>
-        <li><a href="#timeline" class="nav__link">History</a></li>
         <li><a href="#join" class="nav__link nav__link--cta">Join</a></li>
       </ul>
     </nav>
@@ -126,6 +127,111 @@
       </a>
     </section>
 
+    <!-- ===== MATCH CENTER + LIVE SIMULATION ===== -->
+    <section class="section section--match" id="match">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow"><span class="live-dot"></span>Match Center</span>
+          <h2 class="section-head__title">Live Match Simulation</h2>
+          <p class="section-head__lead">Relive the semi-final minute by minute — broadcast-style.</p>
+        </header>
+
+        <div class="matchcenter reveal" id="matchCenter">
+          <div class="matchcenter__inner">
+            <div class="mc-top">
+              <span class="mc-comp">
+                <svg class="ucl-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+                State Cup · Semi-Final
+              </span>
+              <span class="mc-status" id="mcStatus"></span>
+            </div>
+
+            <div class="mc-scoreboard">
+              <div class="mc-team mc-team--home">
+                <div class="mc-team__badge">HBU</div>
+                <div class="mc-team__name">H.B.U FC</div>
+                <div class="mc-team__form"><i class="W"></i><i class="W"></i><i class="D"></i><i class="W"></i><i class="L"></i></div>
+              </div>
+              <div class="mc-center">
+                <div class="mc-score"><b id="mcScoreH">0</b><span class="mc-score__sep">:</span><b id="mcScoreA">0</b></div>
+                <div class="mc-clock" id="mcClock">0'</div>
+              </div>
+              <div class="mc-team mc-team--away">
+                <div class="mc-team__badge">AJU</div>
+                <div class="mc-team__name">Ajmer United</div>
+                <div class="mc-team__form"><i class="L"></i><i class="W"></i><i class="D"></i><i class="L"></i><i class="D"></i></div>
+              </div>
+            </div>
+
+            <div class="mc-momentum">
+              <div class="mc-momentum__label"><span>H.B.U FC</span><span>Momentum</span><span>Ajmer United</span></div>
+              <div class="mc-momentum__track">
+                <span class="mc-momentum__home" id="mcMomH"></span>
+                <span class="mc-momentum__away" id="mcMomA"></span>
+              </div>
+            </div>
+
+            <div class="mc-stats">
+              <div class="mc-stat"><b id="mcPossH">50%</b><span>Possession</span></div>
+              <div class="mc-stat"><b id="mcShots">0</b><span>Shots</span></div>
+              <div class="mc-stat"><b id="mcXg">0.0</b><span>xG</span></div>
+            </div>
+
+            <div class="mc-feed">
+              <div class="mc-feed__head">
+                <span class="mc-feed__title">Live Feed</span>
+              </div>
+              <div class="mc-feed__list" id="mcFeed"></div>
+            </div>
+
+            <div class="mc-controls">
+              <button class="mc-btn mc-btn--play" id="mcPlay">Simulate Match</button>
+              <button class="mc-btn" id="mcReset">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TACTICS: 4-3-3 PITCH + FUT CARD ===== -->
+    <section class="section section--tactics" id="tactics">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">Tactics Board</span>
+          <h2 class="section-head__title">Formation &amp; Squad</h2>
+          <p class="section-head__lead">Switch the shape, tap a player, study the card.</p>
+        </header>
+
+        <div class="formation-switch reveal">
+          <button class="formation-switch__btn is-active" data-formation="4-3-3">4-3-3</button>
+          <button class="formation-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
+          <button class="formation-switch__btn" data-formation="3-5-2">3-5-2</button>
+        </div>
+
+        <div class="tactics reveal">
+          <div class="pitch" id="pitch">
+            <div class="pitch__glow"></div>
+            <div class="pitch__lines">
+              <span class="pl-outer"></span>
+              <span class="pl-mid"></span>
+              <span class="pl-circle"></span>
+              <span class="pl-spot"></span>
+              <span class="pl-box-top"></span>
+              <span class="pl-box-bot"></span>
+              <span class="pl-six-top"></span>
+              <span class="pl-six-bot"></span>
+            </div>
+            <!-- players injected by JS -->
+          </div>
+
+          <div class="fut-panel">
+            <div class="fut-card" id="futCard"><!-- JS --></div>
+            <p class="fut-panel__hint">Tap any player on the pitch to load their card</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== 1. STATISTICS ===== -->
     <section class="section section--stats" id="stats">
       <div class="container">
@@ -135,6 +241,44 @@
           <p class="section-head__lead">Nine seasons of grit on the pitches of Ajmer — and counting.</p>
         </header>
         <div class="stats-grid" id="statsGrid"><!-- JS --></div>
+      </div>
+    </section>
+
+    <!-- ===== ANIMATED STATS DASHBOARD ===== -->
+    <section class="section section--dashboard" id="dashboard">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">Season Analytics</span>
+          <h2 class="section-head__title">Statistics Dashboard</h2>
+          <p class="section-head__lead">The numbers behind the run, visualised.</p>
+        </header>
+
+        <div class="dashboard reveal" id="dashboard-grid">
+          <div class="dash-card">
+            <div class="dash-card__title">Win / Draw / Loss</div>
+            <div class="donut">
+              <div class="donut-wrap">
+                <svg class="donut__svg" id="donutSvg" viewBox="0 0 130 130"></svg>
+                <div class="donut-wrap__num" id="donutNum">0%</div>
+              </div>
+              <div class="donut__legend">
+                <div><i style="background:var(--win)"></i><span>Won</span> <b>161</b></div>
+                <div><i style="background:var(--gold-500)"></i><span>Drawn</span> <b>52</b></div>
+                <div><i style="background:var(--crimson-500)"></i><span>Lost</span> <b>35</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-card">
+            <div class="dash-card__title">Goals by Month</div>
+            <div class="bars" id="bars"></div>
+          </div>
+
+          <div class="dash-card">
+            <div class="dash-card__title">Team Profile</div>
+            <div class="radar"><svg class="radar__svg" id="radarSvg" viewBox="0 0 230 230"></svg></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -225,5 +369,6 @@
   <button class="to-top" id="toTop" aria-label="Back to top">↑</button>
 
   <script src="js/main.js" type="module"></script>
+  <script src="js/experience.js" type="module"></script>
 </body>
 </html>
