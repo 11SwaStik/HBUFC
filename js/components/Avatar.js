@@ -1,42 +1,96 @@
-/* Avatar — animated SVG silhouette (NO photos).
-   Position group drives the gradient hue. Returns an SVG string. */
+/* Anime-inspired football avatars — pure SVG, NO photos.
+   Each position group is a "character class" with its own theme, palette,
+   silhouette accents and glow. Returns an <svg> string.
 
-const GRAD = {
-  GK:  ["#22d3ee", "#0ea5b7"],   // cyan
-  DEF: ["#7c5cff", "#4f46e5"],   // violet/blue
-  MID: ["#00f5a0", "#0ea66e"],   // mint/green
-  FWD: ["#ff3d58", "#ff9d3d"],   // crimson/gold
+     GK  → The Wall      (cyan)    broad shoulders, keeper gloves stance
+     DEF → The Guardian  (violet)  shield motif behind shoulders
+     MID → The Engine    (mint)    gear/aura rings
+     RW/LW → The Lightning (gold)  speed streaks
+     ST  → The Finisher  (crimson) flame aura
+*/
+
+const THEME = {
+  GK:  { label: "The Wall",      c1: "#22d3ee", c2: "#0e7490", aura: "#22d3ee" },
+  DEF: { label: "The Guardian",  c1: "#9d86ff", c2: "#4f46e5", aura: "#7c5cff" },
+  MID: { label: "The Engine",    c1: "#3dffb8", c2: "#0ea66e", aura: "#00f5a0" },
+  WING:{ label: "The Lightning", c1: "#ffe49a", c2: "#f59e0b", aura: "#ffd76a" },
+  FWD: { label: "The Finisher",  c1: "#ff6b7e", c2: "#e22945", aura: "#ff3d58" },
 };
 
-/** uid keeps gradient/clip ids unique per card so multiple avatars don't collide. */
-export function Avatar(posGroup, uid) {
-  const [c1, c2] = GRAD[posGroup] || GRAD.MID;
-  const gid = `av-${uid}`;
+/** Wingers get the Lightning theme even though posGroup is FWD. */
+export function themeFor(p) {
+  if (p.position === "RW" || p.position === "LW") return THEME.WING;
+  return THEME[p.posGroup] || THEME.MID;
+}
+
+export function themeLabel(p) { return themeFor(p).label; }
+
+/* Per-theme decorative backdrop behind the character bust. */
+function backdrop(key, uid) {
+  switch (key) {
+    case "The Guardian": // shield
+      return `<path class="av-motif" d="M60 22 L92 34 V62 C92 88 78 102 60 110 C42 102 28 88 28 62 V34 Z"
+                fill="none" stroke="url(#${uid}-g)" stroke-width="2" opacity=".4"/>`;
+    case "The Engine": // gear rings
+      return `<circle class="av-spin" cx="60" cy="60" r="44" fill="none" stroke="url(#${uid}-g)"
+                stroke-width="1.5" stroke-dasharray="6 8" opacity=".5"/>`;
+    case "The Lightning": // speed streaks
+      return `<g class="av-streak" stroke="url(#${uid}-g)" stroke-width="3" stroke-linecap="round" opacity=".55">
+                <path d="M14 40 H40"/><path d="M8 56 H34"/><path d="M14 72 H40"/></g>`;
+    case "The Finisher": // flame aura
+      return `<path class="av-flame" d="M60 18 C70 34 84 40 84 60 a24 24 0 0 1-48 0 c0-12 8-18 12-26 c2 8 8 10 12 6 c-2-10-2-18 0-28z"
+                fill="url(#${uid}-glow)" opacity=".5"/>`;
+    default: // The Wall — solid back panel
+      return `<rect class="av-motif" x="22" y="40" width="76" height="72" rx="14"
+                fill="none" stroke="url(#${uid}-g)" stroke-width="2" opacity=".35"/>`;
+  }
+}
+
+/** uid keeps gradient ids unique per avatar instance. */
+export function Avatar(p, uid = p.id, size = 96) {
+  const t = themeFor(p);
+  const id = `av-${uid}`;
   return `
-  <svg class="avatar" viewBox="0 0 120 120" aria-hidden="true">
+  <svg class="avatar avatar--${(t.label).replace(/\s+/g, "")}" viewBox="0 0 120 130" width="${size}" height="${size * 130 / 120}" role="img" aria-label="${p.name} avatar, ${t.label}">
     <defs>
-      <linearGradient id="${gid}-g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/>
+      <linearGradient id="${id}-g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="${t.c1}"/><stop offset="1" stop-color="${t.c2}"/>
       </linearGradient>
-      <radialGradient id="${gid}-glow" cx="50%" cy="38%" r="60%">
-        <stop offset="0" stop-color="${c1}" stop-opacity=".55"/>
-        <stop offset="1" stop-color="${c1}" stop-opacity="0"/>
+      <radialGradient id="${id}-glow" cx="50%" cy="40%" r="60%">
+        <stop offset="0" stop-color="${t.aura}" stop-opacity=".6"/>
+        <stop offset="1" stop-color="${t.aura}" stop-opacity="0"/>
       </radialGradient>
     </defs>
-    <circle cx="60" cy="56" r="52" fill="url(#${gid}-glow)"/>
-    <!-- silhouette bust: head + shoulders -->
-    <g class="avatar__sil">
-      <path fill="url(#${gid}-g)"
-        d="M60 30c8.3 0 15 6.7 15 15s-6.7 15-15 15-15-6.7-15-15 6.7-15 15-15z"/>
-      <path fill="url(#${gid}-g)"
-        d="M26 108c0-18.8 15.2-34 34-34s34 15.2 34 34c0 2.2-1.8 4-4 4H30c-2.2 0-4-1.8-4-4z"/>
+
+    <!-- ambient glow + theme backdrop -->
+    <ellipse cx="60" cy="58" rx="50" ry="52" fill="url(#${id}-glow)"/>
+    ${backdrop(t.label, id)}
+
+    <!-- character bust: hair, head, neck, shoulders (anime styling) -->
+    <g class="av-char">
+      <!-- shoulders / jersey -->
+      <path d="M24 120 C24 96 40 84 60 84 C80 84 96 96 96 120 Z" fill="url(#${id}-g)"/>
+      <!-- collar V -->
+      <path d="M52 86 L60 98 L68 86" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="2.5"/>
+      <!-- neck -->
+      <rect x="53" y="74" width="14" height="16" rx="6" fill="url(#${id}-g)"/>
+      <!-- head -->
+      <path d="M44 52 C44 38 52 30 60 30 C68 30 76 38 76 52 C76 66 69 76 60 76 C51 76 44 66 44 52 Z" fill="#f1d9c4"/>
+      <!-- spiky anime hair -->
+      <path d="M42 52 C40 34 50 24 60 24 C71 24 81 34 79 53 C76 46 73 44 70 45 C71 39 67 35 64 35 C66 40 62 41 60 38 C58 42 54 41 55 35 C50 37 49 43 50 47 C47 44 44 46 42 52 Z" fill="url(#${id}-g)"/>
+      <!-- glowing eyes -->
+      <g class="av-eyes" fill="${t.aura}">
+        <ellipse cx="53" cy="55" rx="3.2" ry="4.4"/>
+        <ellipse cx="67" cy="55" rx="3.2" ry="4.4"/>
+      </g>
+      <!-- determined mouth -->
+      <path d="M55 66 Q60 69 65 66" fill="none" stroke="rgba(80,40,30,.7)" stroke-width="2" stroke-linecap="round"/>
     </g>
-    <!-- animated traced outline on top -->
-    <g class="avatar__outline" stroke="${c1}" stroke-width="2" fill="none" stroke-linejoin="round">
-      <path d="M60 30c8.3 0 15 6.7 15 15s-6.7 15-15 15-15-6.7-15-15 6.7-15 15-15z"/>
-      <path d="M26 108c0-18.8 15.2-34 34-34s34 15.2 34 34"/>
-    </g>
+
+    <!-- traced outline that animates on reveal -->
+    <path class="av-outline" d="M24 120 C24 96 40 84 60 84 C80 84 96 96 96 120"
+          fill="none" stroke="${t.c1}" stroke-width="2"/>
   </svg>`;
 }
 
-export const avatarGrad = (posGroup) => GRAD[posGroup] || GRAD.MID;
+export const avatarTheme = themeFor;

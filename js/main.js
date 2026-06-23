@@ -5,27 +5,22 @@
 import { $, $$ } from "./lib/dom.js";
 import { club } from "./data/club.js";
 import { players, byId } from "./data/squad.js";
-import { PlayerCard } from "./components/PlayerCard.js";
+import { PlayerProfile } from "./components/PlayerProfile.js";
 import { mountPitch, chemistryScore } from "./components/Pitch.js";
 import { renderValues } from "./components/Values.js";
 import { renderJourney } from "./components/Journey.js";
 import { renderImpact } from "./components/Impact.js";
 import { initMotion } from "./motion/index.js";
-import { setupCardTilt } from "./motion/cardTilt.js";
 
-/* ---------- render ---------- */
-function renderSquad() {
-  const grid = $("#squadGrid");
-  if (grid) grid.innerHTML = players.map((p, i) => PlayerCard(p, i)).join("");
-}
-
-function renderPitch() {
+/* ---------- Brotherhood: pitch-first + profile panel ---------- */
+function renderBrotherhood() {
   const pitch = $("#pitch");
-  if (!pitch) return;
+  const panel = $("#playerProfile");
+  if (!pitch || !panel) return;
 
   const api = mountPitch(pitch, {
     formation: "4-3-3",
-    onSelect: (id) => highlightCard(id),
+    onSelect: (id) => showProfile(byId[id]),
   });
 
   // formation switch
@@ -39,8 +34,24 @@ function renderPitch() {
     });
   });
 
+  function showProfile(p) {
+    panel.innerHTML = PlayerProfile(p);
+    panel.classList.remove("is-swap"); void panel.offsetWidth; panel.classList.add("is-swap");
+
+    // expand/collapse
+    const prof = $(".prof", panel);
+    const toggle = $(".prof__toggle", panel);
+    toggle?.addEventListener("click", () => {
+      const open = prof.classList.toggle("is-expanded");
+      toggle.setAttribute("aria-expanded", String(open));
+      if (open) animateSkills(panel);
+    });
+
+    animateProfileNumbers(panel);   // OVR count-up (visible immediately)
+  }
+
   updateChem("4-3-3");
-  api.select(9); // default highlight the striker
+  api.select(9); // default: the Finisher
 }
 
 function updateChem(key) {
@@ -48,11 +59,32 @@ function updateChem(key) {
   if (el) el.textContent = chemistryScore(key);
 }
 
-// when a pitch dot is selected, pulse the matching card + scroll it into view on mobile
-function highlightCard(id) {
-  $$(".pcard").forEach(c => c.classList.toggle("is-active", +c.dataset.id === id));
-  const card = $(`.pcard[data-id="${id}"]`);
-  if (card && window.innerWidth < 920) card.scrollIntoView({ behavior: "smooth", block: "center" });
+/* OVR (and any always-visible counters) count up on swap */
+function animateProfileNumbers(scope) {
+  $$(".prof__ovr-num", scope).forEach(el => countUp(el, +el.dataset.count, 1100));
+}
+
+/* skill bars + their values animate when the expanded view opens */
+function animateSkills(scope) {
+  $$(".prof-skill", scope).forEach((row, i) => {
+    const bar = $("i", row), val = $(".prof-skill__v", row);
+    setTimeout(() => {
+      row.classList.add("is-live");
+      if (val) countUp(val, +val.dataset.count, 800);
+    }, i * 70);
+  });
+}
+
+function countUp(el, target, dur = 1000) {
+  const start = performance.now();
+  const step = (now) => {
+    const p = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(eased * target);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(step);
 }
 
 /* ---------- hero bits ---------- */
@@ -114,8 +146,7 @@ function mouseLight() {
 
 /* ---------- boot ---------- */
 document.addEventListener("DOMContentLoaded", () => {
-  renderSquad();
-  renderPitch();
+  renderBrotherhood();
   renderValues($("#valuesGrid"));
   renderJourney($("#journeyList"));
   renderImpact($("#impactGrid"));
@@ -126,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
   mouseLight();
 
   initMotion();          // GSAP/Lenis/SplitType (or graceful fallback)
-  setupCardTilt();       // card 3D tilt
 
   const yr = $("#year");
   if (yr) yr.textContent = new Date().getFullYear();

@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/brotherhood.css" />
 
   <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -129,31 +130,39 @@ who were overlooked.</h2>
       <div class="container">
         <header class="section-head brother-intro reveal">
           <span class="section-head__eyebrow">Meet the Brotherhood</span>
-          <h2 class="section-head__title">Characters in a football universe</h2>
-          <p class="section-head__lead">Not profiles — characters. Tap the pitch to explore the 4-3-3 and the chemistry that binds them.</p>
+          <h2 class="section-head__title">Step onto the pitch</h2>
+          <p class="section-head__lead">Eleven characters, one formation. Tap any player to open their profile.</p>
         </header>
 
-        <div class="squad-layout">
-          <div class="squad-grid reveal" id="squadGrid"><!-- JS: PlayerCard --></div>
-
-          <aside class="pitch-panel reveal">
-            <div class="form-switch">
-              <button class="form-switch__btn is-active" data-formation="4-3-3">4-3-3</button>
-              <button class="form-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
-              <button class="form-switch__btn" data-formation="3-5-2">3-5-2</button>
+        <div class="brotherhood reveal">
+          <!-- LEFT 70% — the pitch is the centerpiece -->
+          <div class="bh-pitch">
+            <div class="bh-pitch__bar">
+              <div class="form-switch">
+                <button class="form-switch__btn is-active" data-formation="4-3-3">4-3-3</button>
+                <button class="form-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
+                <button class="form-switch__btn" data-formation="3-5-2">3-5-2</button>
+              </div>
+              <div class="chem">
+                <span class="chem__label">Chemistry</span>
+                <span class="chem__val" id="chemScore">0</span>
+              </div>
             </div>
-            <div class="pitch" id="pitch">
+
+            <div class="pitch pitch--hero" id="pitch">
               <div class="pitch__glow"></div>
               <div class="pitch__lines">
                 <span class="pl-outer"></span><span class="pl-mid"></span><span class="pl-circle"></span><span class="pl-spot"></span>
                 <span class="pl-box-top"></span><span class="pl-box-bot"></span><span class="pl-six-top"></span><span class="pl-six-bot"></span>
               </div>
+              <!-- players injected by JS -->
             </div>
-            <div class="chem">
-              <span class="chem__label">Team Chemistry</span>
-              <span class="chem__val" id="chemScore">0</span>
-            </div>
-            <p class="chem__hint">Hover a player on the pitch to trace their links</p>
+            <p class="bh-pitch__hint">Tap a player · hover to trace chemistry links</p>
+          </div>
+
+          <!-- RIGHT 30% — selected player profile -->
+          <aside class="bh-profile">
+            <div class="player-profile" id="playerProfile"><!-- JS: PlayerProfile --></div>
           </aside>
         </div>
       </div>

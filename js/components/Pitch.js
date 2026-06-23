@@ -1,13 +1,15 @@
-/* Pitch — interactive 4-3-3 board. Places squad by formation coords,
-   draws chemistry links, emits selection via callback. */
+/* Pitch — the centerpiece. Places the squad by formation coords, draws chemistry
+   links, and emits selection. Selecting a player dims the rest and glows the chosen
+   one. Selection persists across formation changes. */
 import { $, $$, el } from "../lib/dom.js";
 import { formations } from "../data/formations.js";
 import { byId } from "../data/squad.js";
 
 export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
   let current = formation;
+  let selectedId = null;
 
-  // chemistry link layer (SVG, behind dots)
+  // chemistry link layer (SVG, behind tokens)
   const linkSvg = el("svg.pitch__links", { viewBox: "0 0 100 100", preserveAspectRatio: "none" });
   linkSvg.setAttribute("aria-hidden", "true");
   root.appendChild(linkSvg);
@@ -17,25 +19,31 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     const spots = formations[key];
     const coord = Object.fromEntries(spots.map(s => [s.id, s]));
 
-    // players
     $$(".pitch__player", root).forEach(n => n.remove());
     spots.forEach((s, i) => {
       const p = byId[s.id];
       const node = el("button.pitch__player", {
-        dataset: { id: s.id, group: p.posGroup },
+        dataset: { id: s.id, group: p.posGroup, pos: p.position },
         "aria-label": `${p.name}, ${p.position}`,
-        html: `<span class="pp-dot">${p.number}</span><span class="pp-name">${p.name.split(" ")[0]}</span>`,
+        html: `
+          <span class="pp-token">
+            <span class="pp-glow"></span>
+            <span class="pp-dot">${p.number}</span>
+          </span>
+          <span class="pp-name">${p.name.split(" ")[0]}</span>`,
       });
       node.style.left = `${s.x}%`;
       node.style.top = `${s.y}%`;
-      node.style.transitionDelay = `${i * 0.025}s`;
+      node.style.transitionDelay = `${i * 0.03}s`;
       node.addEventListener("click", () => select(s.id));
-      node.addEventListener("mouseenter", () => highlightChem(s.id));
-      node.addEventListener("mouseleave", () => drawAllLinks());
+      node.addEventListener("mouseenter", () => { if (!selectedId) highlightChem(s.id); });
+      node.addEventListener("mouseleave", () => { if (!selectedId) drawAllLinks(); });
       root.appendChild(node);
     });
 
-    drawAllLinks(coord);
+    // restore selection visuals in the new shape
+    if (selectedId != null) applySelection(selectedId);
+    else drawAllLinks(coord);
   }
 
   function linkLine(a, b, strength, cls = "") {
@@ -52,12 +60,11 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     linkSvg.innerHTML = "";
     const seen = new Set();
     for (const s of formations[current]) {
-      const p = byId[s.id];
-      (p.chem || []).forEach(cid => {
+      (byId[s.id].chem || []).forEach(cid => {
         const key = [s.id, cid].sort().join("-");
         if (seen.has(key) || !coord[cid]) return;
         seen.add(key);
-        linkSvg.appendChild(linkLine(coord[s.id], coord[cid], 0.28));
+        linkSvg.appendChild(linkLine(coord[s.id], coord[cid], 0.26));
       });
     }
   }
@@ -70,14 +77,30 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     });
   }
 
-  function select(id) {
-    $$(".pitch__player", root).forEach(n => n.classList.toggle("is-selected", +n.dataset.id === id));
+  // visual-only: glow selected, fade the rest, mark linked teammates
+  function applySelection(id) {
+    const linked = new Set(byId[id]?.chem || []);
+    root.classList.add("has-selection");
+    $$(".pitch__player", root).forEach(n => {
+      const nid = +n.dataset.id;
+      n.classList.toggle("is-selected", nid === id);
+      n.classList.toggle("is-linked", linked.has(nid));
+    });
     highlightChem(id);
+  }
+
+  function select(id) {
+    selectedId = id;
+    applySelection(id);
     onSelect?.(id);
   }
 
   place(current);
-  return { place, select };
+  return {
+    place,
+    select,
+    get selectedId() { return selectedId; },
+  };
 }
 
 /** Total chemistry: count of satisfied links (both players present in formation). */
