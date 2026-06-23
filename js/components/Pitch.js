@@ -4,6 +4,7 @@
 import { $, $$, el } from "../lib/dom.js";
 import { formations } from "../data/formations.js";
 import { byId } from "../data/squad.js";
+import { FULL_POS } from "../lib/positions.js";
 
 export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
   let current = formation;
@@ -13,6 +14,10 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
   const linkSvg = el("svg.pitch__links", { viewBox: "0 0 100 100", preserveAspectRatio: "none" });
   linkSvg.setAttribute("aria-hidden", "true");
   root.appendChild(linkSvg);
+
+  // minimal tooltip for the selected player (name · position · number only)
+  const tip = el("div.pitch__tip", { "aria-hidden": "true" });
+  root.appendChild(tip);
 
   function place(key) {
     current = key;
@@ -77,7 +82,7 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     });
   }
 
-  // visual-only: glow selected, fade the rest, mark linked teammates
+  // visual-only: glow selected, fade the rest, mark linked teammates, show tooltip
   function applySelection(id) {
     const linked = new Set(byId[id]?.chem || []);
     root.classList.add("has-selection");
@@ -87,6 +92,24 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
       n.classList.toggle("is-linked", linked.has(nid));
     });
     highlightChem(id);
+    showTip(id);
+  }
+
+  // minimal tooltip — name, full position, number. No ratings/stats/foot.
+  function showTip(id) {
+    const p = byId[id];
+    const spot = formations[current].find(s => s.id === id);
+    if (!p || !spot) return;
+    tip.innerHTML = `
+      <span class="pitch__tip-name">${p.name}</span>
+      <span class="pitch__tip-pos">${FULL_POS[p.position] || p.position}</span>
+      <span class="pitch__tip-num">#${p.number}</span>`;
+    tip.style.left = `${spot.x}%`;
+    tip.style.top = `${spot.y}%`;
+    // flip above/below so it never runs off the top edge
+    tip.classList.toggle("is-below", spot.y < 22);
+    tip.dataset.group = p.posGroup;
+    root.classList.add("show-tip");
   }
 
   function select(id) {

@@ -29,7 +29,8 @@
 /* ---------- card ---------- */
 .bro-card{
   position:relative;flex:0 0 clamp(244px,22vw,288px);scroll-snap-align:center;
-  height:clamp(360px,46vw,430px);border-radius:22px;overflow:hidden;cursor:pointer;isolation:isolate;
+  height:clamp(380px,46vw,440px);border-radius:22px;overflow:hidden;cursor:pointer;isolation:isolate;
+  display:flex;flex-direction:column;
   background:linear-gradient(180deg,#13141f 0%,#0a0b12 70%);border:1px solid var(--border-glass);
   transition:transform .45s var(--ease-out),box-shadow .45s var(--ease-out),border-color .45s}
 .bro-card[data-group=GK]{--ac:#22d3ee} .bro-card[data-group=DEF]{--ac:#7c5cff}
@@ -46,35 +47,34 @@
   transition:transform .45s var(--ease-out)}
 .bro-card__avatar .avatar{filter:drop-shadow(0 12px 30px color-mix(in srgb,var(--ac) 45%,transparent))}
 
-.bro-card__body{position:relative;z-index:1;text-align:center;padding:6px 18px 0}
+/* body: archetype · name · position · (button revealed on hover) */
+.bro-card__body{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:6px 18px 26px;margin-top:auto}
 .bro-card__archetype{display:inline-block;font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;
   text-transform:uppercase;color:var(--ac);margin-bottom:8px}
 .bro-card__name{font-family:var(--font-display);font-size:1.3rem;font-weight:700;line-height:1.05}
 .bro-card__pos{display:block;color:var(--text-muted);font-size:.82rem;margin-top:3px}
 
-/* quick attribute preview — hidden until hover */
-.bro-card__preview{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;justify-content:center;gap:20px;
-  padding:18px;background:linear-gradient(180deg,transparent,rgba(5,6,10,.92) 40%);
-  transform:translateY(100%);opacity:0;transition:transform .45s var(--ease-out),opacity .45s}
-.bro-card__stat{display:flex;flex-direction:column;align-items:center;line-height:1}
-.bro-card__stat-v{font-family:var(--font-display);font-weight:700;font-size:1.3rem;color:#fff}
-.bro-card__stat-k{font-size:.6rem;letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;margin-top:4px}
-.bro-card__cue{position:absolute;left:0;right:0;bottom:14px;z-index:3;text-align:center;font-size:.72rem;
-  letter-spacing:.1em;color:var(--ac);opacity:0;transform:translateY(8px);transition:all .45s var(--ease-out) .05s}
+/* View Profile button — collapsed until hover/focus (no overlap, no stats) */
+.bro-card__btn{display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;color:#0a0a0f;
+  background:var(--grad-brand);border-radius:999px;
+  max-height:0;opacity:0;padding:0 18px;margin-top:0;overflow:hidden;
+  transition:max-height .4s var(--ease-out),opacity .35s var(--ease-out),margin-top .4s var(--ease-out)}
 
-/* hover / focus: expand + glow + reveal preview */
+/* hover / focus: expand + glow + reveal button */
 @media (hover:hover){
   .bro-card:hover{transform:translateY(-12px) scale(1.035);border-color:color-mix(in srgb,var(--ac) 55%,transparent);
     box-shadow:0 34px 70px rgba(0,0,0,.6),0 0 40px color-mix(in srgb,var(--ac) 30%,transparent)}
   .bro-card:hover .bro-card__glow{opacity:1}
   .bro-card:hover .bro-card__num{color:color-mix(in srgb,var(--ac) 38%,transparent)}
-  .bro-card:hover .bro-card__avatar{transform:translateY(-8px) scale(1.05)}
-  .bro-card:hover .bro-card__preview{transform:translateY(0);opacity:1}
-  .bro-card:hover .bro-card__cue{opacity:1;transform:none}
+  .bro-card:hover .bro-card__avatar{transform:translateY(-6px) scale(1.04)}
+  .bro-card:hover .bro-card__btn{max-height:44px;opacity:1;padding:10px 18px;margin-top:14px}
 }
-.bro-card:focus-visible{transform:translateY(-12px) scale(1.035);border-color:var(--ac);outline:none}
-.bro-card:focus-visible .bro-card__preview{transform:translateY(0);opacity:1}
-.bro-card:focus-visible .bro-card__cue{opacity:1;transform:none}
+.bro-card:focus-visible{transform:translateY(-12px) scale(1.035);border-color:var(--ac);outline:none;
+  box-shadow:0 34px 70px rgba(0,0,0,.6),0 0 40px color-mix(in srgb,var(--ac) 30%,transparent)}
+.bro-card:focus-visible .bro-card__glow{opacity:1}
+.bro-card:focus-visible .bro-card__btn{max-height:44px;opacity:1;padding:10px 18px;margin-top:14px}
 
 /* entrance */
 .bro-carousel.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out)}

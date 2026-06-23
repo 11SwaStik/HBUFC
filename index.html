@@ -135,36 +135,28 @@ who were overlooked.</h2>
           <p class="section-head__lead">The shape of the brotherhood. Tap a player to read them on the board.</p>
         </header>
 
-        <div class="brotherhood reveal">
-          <!-- LEFT 70% — the pitch is the centerpiece -->
-          <div class="bh-pitch">
-            <div class="bh-pitch__bar">
-              <div class="form-switch">
-                <button class="form-switch__btn is-active" data-formation="4-3-3">4-3-3</button>
-                <button class="form-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
-                <button class="form-switch__btn" data-formation="3-5-2">3-5-2</button>
-              </div>
-              <div class="chem">
-                <span class="chem__label">Chemistry</span>
-                <span class="chem__val" id="chemScore">0</span>
-              </div>
+        <div class="formation reveal">
+          <div class="formation__bar">
+            <div class="form-switch">
+              <button class="form-switch__btn is-active" data-formation="4-3-3">4-3-3</button>
+              <button class="form-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
+              <button class="form-switch__btn" data-formation="3-5-2">3-5-2</button>
             </div>
-
-            <div class="pitch pitch--hero" id="pitch">
-              <div class="pitch__glow"></div>
-              <div class="pitch__lines">
-                <span class="pl-outer"></span><span class="pl-mid"></span><span class="pl-circle"></span><span class="pl-spot"></span>
-                <span class="pl-box-top"></span><span class="pl-box-bot"></span><span class="pl-six-top"></span><span class="pl-six-bot"></span>
-              </div>
-              <!-- players injected by JS -->
+            <div class="chem">
+              <span class="chem__label">Chemistry</span>
+              <span class="chem__val" id="chemScore">0</span>
             </div>
-            <p class="bh-pitch__hint">Tap a player · hover to trace chemistry links</p>
           </div>
 
-          <!-- RIGHT 30% — selected player profile -->
-          <aside class="bh-profile">
-            <div class="player-profile" id="playerProfile"><!-- JS: PlayerProfile --></div>
-          </aside>
+          <div class="pitch pitch--full" id="pitch">
+            <div class="pitch__glow"></div>
+            <div class="pitch__lines">
+              <span class="pl-outer"></span><span class="pl-mid"></span><span class="pl-circle"></span><span class="pl-spot"></span>
+              <span class="pl-box-top"></span><span class="pl-box-bot"></span><span class="pl-six-top"></span><span class="pl-six-bot"></span>
+            </div>
+            <!-- players + tooltip injected by JS -->
+          </div>
+          <p class="formation__hint">Tap a player to highlight · hover to trace chemistry links</p>
         </div>
       </div>
     </section>

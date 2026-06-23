@@ -4,8 +4,7 @@
    ==================================================================== */
 import { $, $$ } from "./lib/dom.js";
 import { club } from "./data/club.js";
-import { players, byId } from "./data/squad.js";
-import { PlayerProfile } from "./components/PlayerProfile.js";
+import { players } from "./data/squad.js";
 import { BrotherCard } from "./components/BrotherCard.js";
 import { openModal } from "./components/PlayerModal.js";
 import { mountPitch, chemistryScore } from "./components/Pitch.js";
@@ -14,16 +13,12 @@ import { renderJourney } from "./components/Journey.js";
 import { renderImpact } from "./components/Impact.js";
 import { initMotion } from "./motion/index.js";
 
-/* ---------- Brotherhood: pitch-first + profile panel ---------- */
-function renderBrotherhood() {
+/* ---------- Formation: full-width tactical view (no profile panel) ---------- */
+function renderFormation() {
   const pitch = $("#pitch");
-  const panel = $("#playerProfile");
-  if (!pitch || !panel) return;
+  if (!pitch) return;
 
-  const api = mountPitch(pitch, {
-    formation: "4-3-3",
-    onSelect: (id) => showProfile(byId[id]),
-  });
+  const api = mountPitch(pitch, { formation: "4-3-3" });
 
   // formation switch
   $$(".form-switch__btn").forEach(btn => {
@@ -36,24 +31,8 @@ function renderBrotherhood() {
     });
   });
 
-  function showProfile(p) {
-    panel.innerHTML = PlayerProfile(p);
-    panel.classList.remove("is-swap"); void panel.offsetWidth; panel.classList.add("is-swap");
-
-    // expand/collapse
-    const prof = $(".prof", panel);
-    const toggle = $(".prof__toggle", panel);
-    toggle?.addEventListener("click", () => {
-      const open = prof.classList.toggle("is-expanded");
-      toggle.setAttribute("aria-expanded", String(open));
-      if (open) animateSkills(panel);
-    });
-
-    animateProfileNumbers(panel);   // OVR count-up (visible immediately)
-  }
-
   updateChem("4-3-3");
-  api.select(9); // default: the Finisher
+  api.select(9); // default highlight to seed the chemistry view
 }
 
 function updateChem(key) {
@@ -96,34 +75,6 @@ function renderBrotherhoodCarousel() {
     track.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
   }
-}
-
-/* OVR (and any always-visible counters) count up on swap */
-function animateProfileNumbers(scope) {
-  $$(".prof__ovr-num", scope).forEach(el => countUp(el, +el.dataset.count, 1100));
-}
-
-/* skill bars + their values animate when the expanded view opens */
-function animateSkills(scope) {
-  $$(".prof-skill", scope).forEach((row, i) => {
-    const bar = $("i", row), val = $(".prof-skill__v", row);
-    setTimeout(() => {
-      row.classList.add("is-live");
-      if (val) countUp(val, +val.dataset.count, 800);
-    }, i * 70);
-  });
-}
-
-function countUp(el, target, dur = 1000) {
-  const start = performance.now();
-  const step = (now) => {
-    const p = Math.min((now - start) / dur, 1);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(eased * target);
-    if (p < 1) requestAnimationFrame(step);
-    else el.textContent = target;
-  };
-  requestAnimationFrame(step);
 }
 
 /* ---------- hero bits ---------- */
@@ -185,7 +136,7 @@ function mouseLight() {
 
 /* ---------- boot ---------- */
 document.addEventListener("DOMContentLoaded", () => {
-  renderBrotherhood();
+  renderFormation();
   renderBrotherhoodCarousel();
   renderValues($("#valuesGrid"));
   renderJourney($("#journeyList"));
