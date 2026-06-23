@@ -65,7 +65,7 @@ export function openModal(idOrPlayer) {
         <span class="pmodal__archetype">${theme}</span>
         <h3 class="pmodal__name">${p.name}</h3>
         ${p.nickname ? `<span class="pmodal__nick">“${p.nickname}”</span>` : ""}
-        <span class="pmodal__pos">${FULL_POS[p.position] || p.position} · #${p.number}</span>
+        <span class="pmodal__pos">${FULL_POS[p.preferredPosition] || p.preferredPosition} · #${p.number}</span>
       </div>
     </div>
 

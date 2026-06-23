@@ -3,7 +3,7 @@
    one. Selection persists across formation changes. */
 import { $, $$, el } from "../lib/dom.js";
 import { formations } from "../data/formations.js";
-import { byId } from "../data/squad.js";
+import { byId, roleFor } from "../data/squad.js";
 import { FULL_POS } from "../lib/positions.js";
 
 export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
@@ -28,8 +28,8 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     spots.forEach((s, i) => {
       const p = byId[s.id];
       const node = el("button.pitch__player", {
-        dataset: { id: s.id, group: p.posGroup, pos: p.position, archetype: p.archetype },
-        "aria-label": `${p.name}, ${p.position}`,
+        dataset: { id: s.id, group: p.posGroup, archetype: p.archetype },
+        "aria-label": `${p.name}, ${roleFor(p, key)}`,
         html: `
           <span class="pp-token">
             <span class="pp-glow"></span>
@@ -95,14 +95,15 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     showTip(id);
   }
 
-  // minimal tooltip — name, full position, number. No ratings/stats/foot.
+  // minimal tooltip — name, CURRENT-formation position, number. No ratings/stats/foot.
   function showTip(id) {
     const p = byId[id];
     const spot = formations[current].find(s => s.id === id);
     if (!p || !spot) return;
+    const role = roleFor(p, current);
     tip.innerHTML = `
       <span class="pitch__tip-name">${p.name}</span>
-      <span class="pitch__tip-pos">${FULL_POS[p.position] || p.position}</span>
+      <span class="pitch__tip-pos">${FULL_POS[role] || role}</span>
       <span class="pitch__tip-num">#${p.number}</span>`;
     tip.style.left = `${spot.x}%`;
     tip.style.top = `${spot.y}%`;

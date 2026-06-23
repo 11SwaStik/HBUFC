@@ -1,9 +1,14 @@
-/* Formation coordinates as % of the pitch.
+/* Formation coordinates as % of the pitch — PLACEMENT ONLY.
    x: 0 (left) → 100 (right).  y: 0 (opponent goal / attack) → 100 (own goal).
    Keyed by player id (= jersey number) so the same squad can take any shape.
 
-   Squad roles: 1 GK · 2 RB · 3 LB · 4 CB · 5 CB · 6 CMF · 7 DMF · 8 CMF
-                · 9 RWF · 10 CF · 11 LWF */
+   Display position is NOT stored here — each player owns their per-formation
+   role via `formationRoles` in squad.js, so the tooltip reads the player's
+   current role in the active formation. Formations only decide WHERE a marker
+   sits; the player decides WHAT they are called there.
+
+   Default squad: 1 GK · 2 RB · 3 LB · 4 CB · 5 CB · 6 CMF · 7 DMF
+                  · 8 CMF · 9 RWF · 10 CF · 11 LWF */
 export const formations = {
   "4-3-3": [
     { id: 1,  x: 50, y: 90 },

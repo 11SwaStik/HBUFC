@@ -19,7 +19,7 @@ export function BrotherCard(p, i = 0) {
     <div class="bro-card__body">
       <span class="bro-card__archetype">${theme}</span>
       <h3 class="bro-card__name">${p.name}</h3>
-      <span class="bro-card__pos">${FULL_POS[p.position] || p.position}</span>
+      <span class="bro-card__pos">${FULL_POS[p.preferredPosition] || p.preferredPosition}</span>
       <span class="bro-card__btn">View Profile →</span>
     </div>
   </article>`;
