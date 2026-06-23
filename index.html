@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riverside FC — Local Football Club</title>
+  <meta name="description" content="Official website of Riverside FC, your local football club. Fixtures, squad, news and more." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ===== Header / Navigation ===== -->
+  <header class="site-header" id="top">
+    <nav class="nav container">
+      <a href="#top" class="brand">
+        <span class="brand-badge">RFC</span>
+        <span class="brand-name">Riverside FC</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#squad">Squad</a></li>
+        <li><a href="#fixtures">Fixtures</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content container">
+      <p class="hero-eyebrow">Est. 1924 · Riverside</p>
+      <h1 class="hero-title">Welcome to Riverside FC</h1>
+      <p class="hero-subtitle">Passion. Community. Football. Join us on the pitch this season.</p>
+      <div class="hero-actions">
+        <a href="#fixtures" class="btn btn-primary">View Fixtures</a>
+        <a href="#contact" class="btn btn-ghost">Join the Club</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stats bar ===== -->
+  <section class="stats">
+    <div class="container stats-grid">
+      <div class="stat"><span class="stat-num" data-target="100">0</span><span class="stat-label">Years of History</span></div>
+      <div class="stat"><span class="stat-num" data-target="3">0</span><span class="stat-label">League Titles</span></div>
+      <div class="stat"><span class="stat-num" data-target="240">0</span><span class="stat-label">Club Members</span></div>
+      <div class="stat"><span class="stat-num" data-target="5">0</span><span class="stat-label">Youth Teams</span></div>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">About the Club</h2>
+      <p class="section-lead">
+        Riverside FC is a community football club founded in 1924. We bring together players of all ages
+        and abilities, united by a love for the beautiful game.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Our Mission</h3>
+          <p>To grow the game in our community, develop local talent, and bring people together through football.</p>
+        </article>
+        <article class="card">
+          <h3>Our Values</h3>
+          <p>Respect, teamwork, and inclusion — both on and off the pitch. Everyone is welcome at Riverside.</p>
+        </article>
+        <article class="card">
+          <h3>Our Home</h3>
+          <p>Riverside Park Stadium has been our home for nearly a century, where memories are made every matchday.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Squad ===== -->
+  <section class="section section-alt" id="squad">
+    <div class="container">
+      <h2 class="section-title">The Squad</h2>
+      <p class="section-lead">Meet the players representing Riverside FC this season.</p>
+      <div class="squad-grid" id="squadGrid">
+        <!-- Players injected by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Fixtures & Results ===== -->
+  <section class="section" id="fixtures">
+    <div class="container">
+      <h2 class="section-title">Fixtures &amp; Results</h2>
+      <p class="section-lead">Stay up to date with our upcoming matches and recent results.</p>
+      <div class="fixtures" id="fixturesList">
+        <!-- Fixtures injected by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== News ===== -->
+  <section class="section section-alt" id="news">
+    <div class="container">
+      <h2 class="section-title">Latest News</h2>
+      <div class="cards">
+        <article class="card news-card">
+          <span class="news-date">12 Jun 2026</span>
+          <h3>Pre-season training begins</h3>
+          <p>The squad returned to Riverside Park this week to kick off preparations for the new campaign.</p>
+        </article>
+        <article class="card news-card">
+          <span class="news-date">5 Jun 2026</span>
+          <h3>New signing announced</h3>
+          <p>We're delighted to welcome midfielder Alex Carter to the club on a two-year deal.</p>
+        </article>
+        <article class="card news-card">
+          <span class="news-date">28 May 2026</span>
+          <h3>Youth academy open day</h3>
+          <p>Calling all young players! Join our free open day and try out for the Riverside youth teams.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section class="section" id="contact">
+    <div class="container contact-wrap">
+      <div>
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="section-lead">Want to join, sponsor, or just say hello? Drop us a message.</p>
+        <ul class="contact-info">
+          <li><strong>Ground:</strong> Riverside Park Stadium, Riverside</li>
+          <li><strong>Email:</strong> hello@riversidefc.example</li>
+          <li><strong>Phone:</strong> +00 1234 567890</li>
+        </ul>
+      </div>
+      <form class="contact-form" id="contactForm" novalidate>
+        <label>
+          Name
+          <input type="text" name="name" required placeholder="Your name" />
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required placeholder="you@example.com" />
+        </label>
+        <label>
+          Message
+          <textarea name="message" rows="4" required placeholder="How can we help?"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>&copy; <span id="year"></span> Riverside FC. All rights reserved.</span>
+      <a href="#top" class="back-to-top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
