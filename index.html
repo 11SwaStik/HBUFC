@@ -3,167 +3,227 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Riverside FC — Local Football Club</title>
-  <meta name="description" content="Official website of Riverside FC, your local football club. Fixtures, squad, news and more." />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#05060a" />
+  <title>H.B.U FC — Football Club · Ajmer</title>
+  <meta name="description" content="Official home of H.B.U FC — Est. 2017, Ajmer, Rajasthan. Fixtures, squad, stats and more." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="H.B.U FC" />
+  <meta property="og:description" content="Passion. Pride. Ajmer. The official home of H.B.U FC." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- ===== Header / Navigation ===== -->
-  <header class="site-header" id="top">
+
+  <!-- ===== Global FX layers ===== -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <div class="mouse-glow" id="mouseGlow" aria-hidden="true"></div>
+  <div class="bg-fx" aria-hidden="true">
+    <div class="bg-aurora"></div>
+    <div class="bg-grid"></div>
+    <span class="orb orb--1"></span>
+    <span class="orb orb--2"></span>
+    <span class="orb orb--3"></span>
+  </div>
+
+  <!-- ===== Header ===== -->
+  <header class="header" id="header">
     <nav class="nav container">
-      <a href="#top" class="brand">
-        <span class="brand-badge">RFC</span>
-        <span class="brand-name">Riverside FC</span>
+      <a href="#home" class="brand" aria-label="H.B.U FC home">
+        <span class="crest" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="40" height="40" role="img" aria-label="H.B.U FC crest">
+            <defs>
+              <linearGradient id="crestGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ff3d58" />
+                <stop offset="1" stop-color="#ffd76a" />
+              </linearGradient>
+            </defs>
+            <path d="M32 2 L58 12 V32 C58 48 46 58 32 62 C18 58 6 48 6 32 V12 Z"
+                  fill="none" stroke="url(#crestGrad)" stroke-width="2.5" />
+            <text x="32" y="40" text-anchor="middle" font-family="Space Grotesk, sans-serif"
+                  font-size="18" font-weight="700" fill="url(#crestGrad)">HBU</text>
+          </svg>
+        </span>
+        <span class="brand__name">H.B.U <span class="brand__fc">FC</span></span>
       </a>
 
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
 
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#about">About</a></li>
-        <li><a href="#squad">Squad</a></li>
-        <li><a href="#fixtures">Fixtures</a></li>
-        <li><a href="#news">News</a></li>
-        <li><a href="#contact">Contact</a></li>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#stats" class="nav__link">Stats</a></li>
+        <li><a href="#players" class="nav__link">Players</a></li>
+        <li><a href="#results" class="nav__link">Results</a></li>
+        <li><a href="#trophies" class="nav__link">Trophies</a></li>
+        <li><a href="#timeline" class="nav__link">History</a></li>
+        <li><a href="#join" class="nav__link nav__link--cta">Join</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- ===== Hero ===== -->
-  <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content container">
-      <p class="hero-eyebrow">Est. 1924 · Riverside</p>
-      <h1 class="hero-title">Welcome to Riverside FC</h1>
-      <p class="hero-subtitle">Passion. Community. Football. Join us on the pitch this season.</p>
-      <div class="hero-actions">
-        <a href="#fixtures" class="btn btn-primary">View Fixtures</a>
-        <a href="#contact" class="btn btn-ghost">Join the Club</a>
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+      <!-- animated football-themed background -->
+      <div class="hero__pitch" aria-hidden="true">
+        <span class="pitch-line pitch-line--mid"></span>
+        <span class="pitch-circle"></span>
+        <span class="pitch-arc pitch-arc--top"></span>
+        <span class="pitch-arc pitch-arc--bottom"></span>
       </div>
-    </div>
-  </section>
+      <div class="hero__particles" id="particles" aria-hidden="true"></div>
 
-  <!-- ===== Stats bar ===== -->
-  <section class="stats">
-    <div class="container stats-grid">
-      <div class="stat"><span class="stat-num" data-target="100">0</span><span class="stat-label">Years of History</span></div>
-      <div class="stat"><span class="stat-num" data-target="3">0</span><span class="stat-label">League Titles</span></div>
-      <div class="stat"><span class="stat-num" data-target="240">0</span><span class="stat-label">Club Members</span></div>
-      <div class="stat"><span class="stat-num" data-target="5">0</span><span class="stat-label">Youth Teams</span></div>
-    </div>
-  </section>
+      <div class="hero__inner container">
+        <div class="hero__crest" id="heroCrest" aria-hidden="true">
+          <svg viewBox="0 0 200 200" width="150" height="150">
+            <defs>
+              <linearGradient id="heroCrestGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ff3d58" />
+                <stop offset=".5" stop-color="#ff6b3d" />
+                <stop offset="1" stop-color="#ffd76a" />
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="78" fill="none" stroke="url(#heroCrestGrad)" stroke-width="2" opacity=".5" class="crest-ring" />
+            <path d="M100 14 L170 40 V104 C170 150 138 178 100 188 C62 178 30 150 30 104 V40 Z"
+                  fill="rgba(255,61,88,.06)" stroke="url(#heroCrestGrad)" stroke-width="3" />
+            <text x="100" y="118" text-anchor="middle" font-family="Space Grotesk, sans-serif"
+                  font-size="46" font-weight="700" fill="url(#heroCrestGrad)">HBU</text>
+            <text x="100" y="150" text-anchor="middle" font-family="Inter, sans-serif"
+                  font-size="13" letter-spacing="4" fill="#ffd76a">EST. 2017</text>
+          </svg>
+        </div>
 
-  <!-- ===== About ===== -->
-  <section class="section" id="about">
-    <div class="container">
-      <h2 class="section-title">About the Club</h2>
-      <p class="section-lead">
-        Riverside FC is a community football club founded in 1924. We bring together players of all ages
-        and abilities, united by a love for the beautiful game.
-      </p>
-      <div class="cards">
-        <article class="card">
-          <h3>Our Mission</h3>
-          <p>To grow the game in our community, develop local talent, and bring people together through football.</p>
-        </article>
-        <article class="card">
-          <h3>Our Values</h3>
-          <p>Respect, teamwork, and inclusion — both on and off the pitch. Everyone is welcome at Riverside.</p>
-        </article>
-        <article class="card">
-          <h3>Our Home</h3>
-          <p>Riverside Park Stadium has been our home for nearly a century, where memories are made every matchday.</p>
-        </article>
+        <p class="hero__eyebrow reveal">Est. 2017 · Ajmer, Rajasthan · India</p>
+
+        <h1 class="hero__title" aria-label="H.B.U FC">
+          <span class="hero__word" style="--d:.1s">H.B.U</span>
+          <span class="hero__word hero__word--accent" style="--d:.28s">FC</span>
+        </h1>
+
+        <p class="hero__slogan">
+          <span id="typed"></span><span class="caret" aria-hidden="true">|</span>
+        </p>
+
+        <div class="hero__actions reveal" style="--d:.6s">
+          <a href="#join" class="btn btn--primary">
+            <span>Join the Club</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#results" class="btn btn--ghost">Latest Results</a>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ===== Squad ===== -->
-  <section class="section section-alt" id="squad">
-    <div class="container">
-      <h2 class="section-title">The Squad</h2>
-      <p class="section-lead">Meet the players representing Riverside FC this season.</p>
-      <div class="squad-grid" id="squadGrid">
-        <!-- Players injected by JavaScript -->
-      </div>
-    </div>
-  </section>
+      <a href="#stats" class="scroll-cue" aria-label="Scroll down">
+        <span class="scroll-cue__text">Scroll</span>
+        <span class="scroll-cue__mouse"><span></span></span>
+      </a>
+    </section>
 
-  <!-- ===== Fixtures & Results ===== -->
-  <section class="section" id="fixtures">
-    <div class="container">
-      <h2 class="section-title">Fixtures &amp; Results</h2>
-      <p class="section-lead">Stay up to date with our upcoming matches and recent results.</p>
-      <div class="fixtures" id="fixturesList">
-        <!-- Fixtures injected by JavaScript -->
+    <!-- ===== 1. STATISTICS ===== -->
+    <section class="section section--stats" id="stats">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">By the numbers</span>
+          <h2 class="section-head__title">Club Statistics</h2>
+          <p class="section-head__lead">Nine seasons of grit on the pitches of Ajmer — and counting.</p>
+        </header>
+        <div class="stats-grid" id="statsGrid"><!-- JS --></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ===== News ===== -->
-  <section class="section section-alt" id="news">
-    <div class="container">
-      <h2 class="section-title">Latest News</h2>
-      <div class="cards">
-        <article class="card news-card">
-          <span class="news-date">12 Jun 2026</span>
-          <h3>Pre-season training begins</h3>
-          <p>The squad returned to Riverside Park this week to kick off preparations for the new campaign.</p>
-        </article>
-        <article class="card news-card">
-          <span class="news-date">5 Jun 2026</span>
-          <h3>New signing announced</h3>
-          <p>We're delighted to welcome midfielder Alex Carter to the club on a two-year deal.</p>
-        </article>
-        <article class="card news-card">
-          <span class="news-date">28 May 2026</span>
-          <h3>Youth academy open day</h3>
-          <p>Calling all young players! Join our free open day and try out for the Riverside youth teams.</p>
-        </article>
+    <!-- ===== 2. FEATURED PLAYERS ===== -->
+    <section class="section section--players" id="players">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">The Squad</span>
+          <h2 class="section-head__title">Featured Players</h2>
+          <p class="section-head__lead">The faces driving H.B.U FC forward this campaign.</p>
+        </header>
+        <div class="players-grid" id="playersGrid"><!-- JS --></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ===== Contact ===== -->
-  <section class="section" id="contact">
-    <div class="container contact-wrap">
-      <div>
-        <h2 class="section-title">Get in Touch</h2>
-        <p class="section-lead">Want to join, sponsor, or just say hello? Drop us a message.</p>
-        <ul class="contact-info">
-          <li><strong>Ground:</strong> Riverside Park Stadium, Riverside</li>
-          <li><strong>Email:</strong> hello@riversidefc.example</li>
-          <li><strong>Phone:</strong> +00 1234 567890</li>
-        </ul>
+    <!-- ===== 3. RECENT RESULTS ===== -->
+    <section class="section section--results" id="results">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">Matchday</span>
+          <h2 class="section-head__title">Recent Results</h2>
+          <p class="section-head__lead">Form guide and the latest scores from the touchline.</p>
+        </header>
+        <div class="form-guide reveal" id="formGuide"><!-- JS --></div>
+        <div class="results-list" id="resultsList"><!-- JS --></div>
       </div>
-      <form class="contact-form" id="contactForm" novalidate>
-        <label>
-          Name
-          <input type="text" name="name" required placeholder="Your name" />
-        </label>
-        <label>
-          Email
-          <input type="email" name="email" required placeholder="you@example.com" />
-        </label>
-        <label>
-          Message
-          <textarea name="message" rows="4" required placeholder="How can we help?"></textarea>
-        </label>
-        <button type="submit" class="btn btn-primary">Send Message</button>
-        <p class="form-status" id="formStatus" role="status"></p>
-      </form>
-    </div>
-  </section>
+    </section>
+
+    <!-- ===== 4. TROPHY CABINET ===== -->
+    <section class="section section--trophies" id="trophies">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">Honours</span>
+          <h2 class="section-head__title">Trophy Cabinet</h2>
+          <p class="section-head__lead">Silverware earned across the district and the state.</p>
+        </header>
+        <div class="trophies-grid" id="trophiesGrid"><!-- JS --></div>
+      </div>
+    </section>
+
+    <!-- ===== 5. CLUB TIMELINE ===== -->
+    <section class="section section--timeline" id="timeline">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">Our Story</span>
+          <h2 class="section-head__title">Club Timeline</h2>
+          <p class="section-head__lead">From a local kickabout to a club with a crest.</p>
+        </header>
+        <ol class="timeline" id="timelineList"><!-- JS --></ol>
+      </div>
+    </section>
+
+    <!-- ===== 6. CALL TO ACTION ===== -->
+    <section class="section section--cta" id="join">
+      <div class="container">
+        <div class="cta-card reveal">
+          <div class="cta-card__glow" aria-hidden="true"></div>
+          <span class="cta-card__eyebrow">Be part of it</span>
+          <h2 class="cta-card__title">Wear the crest.<br/>Write the next chapter.</h2>
+          <p class="cta-card__lead">Trials, memberships, and sponsorships are open for the 2026 season. Bring your boots — we'll bring the floodlights.</p>
+          <div class="cta-card__actions">
+            <a href="#" class="btn btn--primary"><span>Request a Trial</span></a>
+            <a href="#" class="btn btn--ghost">Become a Sponsor</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <!-- ===== Footer ===== -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span>&copy; <span id="year"></span> Riverside FC. All rights reserved.</span>
-      <a href="#top" class="back-to-top">Back to top ↑</a>
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="brand__name">H.B.U <span class="brand__fc">FC</span></span>
+        <p>Est. 2017 · Ajmer, Rajasthan, India</p>
+      </div>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="#stats">Stats</a>
+        <a href="#players">Players</a>
+        <a href="#results">Results</a>
+        <a href="#trophies">Trophies</a>
+        <a href="#join">Join</a>
+      </nav>
+      <p class="footer__legal">&copy; <span id="year"></span> H.B.U FC. All rights reserved.</p>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+  <script src="js/main.js" type="module"></script>
 </body>
 </html>
