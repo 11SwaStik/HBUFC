@@ -9,6 +9,13 @@
   <meta property="og:title" content="HBUFC — Football for All" />
   <meta property="og:description" content="A grassroots football movement from Ajmer. Talent over favouritism. Everyone deserves an opportunity to play." />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/icon-512.png" />
+
+  <!-- Favicons (generated from the official HBUFC logo) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="assets/site.webmanifest" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,6 +24,7 @@
   <link rel="stylesheet" href="css/sections.css" />
   <link rel="stylesheet" href="css/brotherhood.css" />
   <link rel="stylesheet" href="css/carousel.css" />
+  <link rel="stylesheet" href="css/brand.css" />
 
   <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -25,6 +33,18 @@
   <script defer src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
 </head>
 <body>
+  <!-- ===== Loading experience (official logo reveal) ===== -->
+  <div class="loader" id="loader" role="status" aria-label="Loading HBUFC">
+    <div class="loader__inner">
+      <div class="loader__badge">
+        <span class="loader__ring" aria-hidden="true"></span>
+        <img class="loader__logo" src="assets/logo.png" alt="HBUFC crest" width="150" height="150" />
+      </div>
+      <span class="loader__word">Football for All</span>
+      <span class="loader__bar" aria-hidden="true"><i></i></span>
+    </div>
+  </div>
+
   <!-- ===== Global FX ===== -->
   <div class="mouse-glow" id="mouseGlow" aria-hidden="true"></div>
   <div class="bg-fx" aria-hidden="true">
@@ -37,12 +57,8 @@
   <header class="header" id="header">
     <nav class="nav container">
       <a href="#home" class="brand" aria-label="HBUFC home">
-        <span class="brand__crest" aria-hidden="true">
-          <svg viewBox="0 0 48 48" width="38" height="38">
-            <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3d58"/><stop offset="1" stop-color="#ffd76a"/></linearGradient></defs>
-            <path d="M24 2 L44 9 V25 C44 37 35 44 24 47 C13 44 4 37 4 25 V9 Z" fill="none" stroke="url(#cg)" stroke-width="2.2"/>
-            <text x="24" y="30" text-anchor="middle" font-family="Space Grotesk" font-size="13" font-weight="700" fill="url(#cg)">HBU</text>
-          </svg>
+        <span class="brand__logo">
+          <img src="assets/logo.png" alt="HBUFC crest" width="42" height="42" />
         </span>
         <span class="brand__name">HBU<b>FC</b></span>
       </a>
@@ -65,16 +81,16 @@
   <main>
     <!-- ===== 1. HERO ===== -->
     <section class="hero" id="home">
+      <!-- low-opacity logo watermark, integrated with the gradients -->
+      <div class="hero__watermark" id="heroWatermark" data-parallax="0.12" aria-hidden="true">
+        <img src="assets/logo.png" alt="" />
+      </div>
       <div class="hero__particles" id="particles" aria-hidden="true"></div>
       <div class="hero__inner container">
-        <div class="hero__crest" data-parallax="0.15" aria-hidden="true">
-          <svg viewBox="0 0 200 200" width="140" height="140">
-            <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3d58"/><stop offset=".5" stop-color="#ff6b3d"/><stop offset="1" stop-color="#ffd76a"/></linearGradient></defs>
-            <circle cx="100" cy="100" r="78" fill="none" stroke="url(#hg)" stroke-width="2" opacity=".5" class="crest-ring"/>
-            <path d="M100 14 L170 40 V104 C170 150 138 178 100 188 C62 178 30 150 30 104 V40 Z" fill="rgba(255,61,88,.06)" stroke="url(#hg)" stroke-width="3"/>
-            <text x="100" y="112" text-anchor="middle" font-family="Space Grotesk" font-size="42" font-weight="700" fill="url(#hg)">HBU</text>
-            <text x="100" y="144" text-anchor="middle" font-family="Inter" font-size="12" letter-spacing="4" fill="#ffd76a">EST. 2017 · AJMER</text>
-          </svg>
+        <div class="hero__crest" id="heroCrest" data-parallax="0.15">
+          <span class="hero__crest-badge">
+            <img src="assets/logo.png" alt="HBUFC official crest" width="150" height="150" />
+          </span>
         </div>
 
         <p class="hero__eyebrow">A football movement · Since 2017</p>
@@ -248,11 +264,27 @@ It's how we grow.</h2>
   </main>
 
   <footer class="footer">
-    <div class="container footer__inner">
-      <div class="footer__brand">
-        <span class="brand__name">HBU<b>FC</b></span>
-        <p>Football for All · Est. 2017 · Ajmer, Rajasthan, India</p>
+    <div class="container">
+      <div class="footer__brand-block">
+        <a href="#home" class="footer__logo" aria-label="HBUFC home">
+          <img src="assets/logo.png" alt="HBUFC crest" width="96" height="96" />
+        </a>
+        <span class="footer__slogan">Football for All</span>
+        <div class="footer__meta">
+          <span>Est. 2017</span>
+          <span class="footer__dot" aria-hidden="true">•</span>
+          <span>Ajmer, Rajasthan</span>
+        </div>
       </div>
+
+      <nav class="footer__links" aria-label="Footer">
+        <a href="#story">Story</a>
+        <a href="#values">Values</a>
+        <a href="#formation">Formation</a>
+        <a href="#brotherhood">Brotherhood</a>
+        <a href="#join">Join</a>
+      </nav>
+
       <p class="footer__legal">&copy; <span id="year"></span> HBUFC. Football for All.</p>
     </div>
   </footer>

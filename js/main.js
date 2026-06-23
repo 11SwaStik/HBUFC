@@ -134,8 +134,33 @@ function mouseLight() {
   }, { passive: true });
 }
 
+/* Loader: show a brief premium logo reveal, then fade out once the page
+   (incl. the logo image) is ready. Honours a minimum on-screen time so it
+   never flashes, and a hard timeout so it can never get stuck. */
+function setupLoader() {
+  const loader = $("#loader");
+  if (!loader) return;
+  document.body.classList.add("is-loading");
+  const start = performance.now();
+  const MIN = 1100; // ms — let the reveal play
+
+  const dismiss = () => {
+    const wait = Math.max(0, MIN - (performance.now() - start));
+    setTimeout(() => {
+      loader.classList.add("is-done");
+      document.body.classList.remove("is-loading");
+      setTimeout(() => loader.remove(), 800);
+    }, wait);
+  };
+
+  if (document.readyState === "complete") dismiss();
+  else window.addEventListener("load", dismiss, { once: true });
+  setTimeout(dismiss, 5000); // safety net
+}
+
 /* ---------- boot ---------- */
 document.addEventListener("DOMContentLoaded", () => {
+  setupLoader();
   renderFormation();
   renderBrotherhoodCarousel();
   renderValues($("#valuesGrid"));
