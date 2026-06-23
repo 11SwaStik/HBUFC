@@ -28,7 +28,7 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     spots.forEach((s, i) => {
       const p = byId[s.id];
       const node = el("button.pitch__player", {
-        dataset: { id: s.id, group: p.posGroup, pos: p.position },
+        dataset: { id: s.id, group: p.posGroup, pos: p.position, archetype: p.archetype },
         "aria-label": `${p.name}, ${p.position}`,
         html: `
           <span class="pp-token">

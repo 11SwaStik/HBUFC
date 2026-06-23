@@ -29,16 +29,17 @@
   background:var(--grad-brand);box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 0 3px rgba(255,255,255,.12);
   transition:transform var(--dur) var(--ease-out),box-shadow var(--dur)}
 
-/* position-themed token colors (match avatar themes) */
-.pitch__player[data-group=GK]{--tk:#22d3ee}
-.pitch__player[data-group=GK] .pp-dot{background:linear-gradient(135deg,#22d3ee,#0e7490)}
-.pitch__player[data-group=DEF]{--tk:#7c5cff}
-.pitch__player[data-group=DEF] .pp-dot{background:linear-gradient(135deg,#9d86ff,#4f46e5);color:#fff}
-.pitch__player[data-group=MID]{--tk:#00f5a0}
-.pitch__player[data-group=MID] .pp-dot{background:linear-gradient(135deg,#3dffb8,#0ea66e)}
-.pitch__player[data-pos=RW] .pp-dot,.pitch__player[data-pos=LW] .pp-dot{background:linear-gradient(135deg,#ffe49a,#f59e0b)}
-.pitch__player[data-pos=RW],.pitch__player[data-pos=LW]{--tk:#ffd76a}
-.pitch__player[data-group=FWD]{--tk:#ff3d58}
+/* archetype-themed token colors (match avatar themes) */
+.pitch__player[data-archetype="The Wall"]{--tk:#22d3ee}
+.pitch__player[data-archetype="The Wall"] .pp-dot{background:linear-gradient(135deg,#22d3ee,#0e7490)}
+.pitch__player[data-archetype="The Guardian"]{--tk:#7c5cff}
+.pitch__player[data-archetype="The Guardian"] .pp-dot{background:linear-gradient(135deg,#9d86ff,#4f46e5);color:#fff}
+.pitch__player[data-archetype="The Engine"]{--tk:#00f5a0}
+.pitch__player[data-archetype="The Engine"] .pp-dot{background:linear-gradient(135deg,#3dffb8,#0ea66e)}
+.pitch__player[data-archetype="The Lightning"]{--tk:#ffd76a}
+.pitch__player[data-archetype="The Lightning"] .pp-dot{background:linear-gradient(135deg,#ffe49a,#f59e0b)}
+.pitch__player[data-archetype="The Finisher"]{--tk:#ff3d58}
+.pitch__player[data-archetype="The Finisher"] .pp-dot{background:var(--grad-brand)}
 
 .pp-name{font-size:clamp(.6rem,1vw,.72rem);font-weight:600;color:#fff;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:6px;
   white-space:nowrap;backdrop-filter:blur(4px);transition:transform var(--dur)}

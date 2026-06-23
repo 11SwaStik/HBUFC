@@ -1,12 +1,15 @@
-/* PlayerModal — premium full-profile modal opened from a BrotherCard.
-   Complete stats, biography, height, weight, preferred foot, favourite player,
-   football quote. One modal element is reused; openModal(player) fills it. */
-import { $, $$ } from "../lib/dom.js";
+/* PlayerModal — premium identity profile opened from a BrotherCard.
+   Shows: avatar, name, number, position, age, archetype, height/weight (if any),
+   motto (if any), and tasteful "Coming Soon" placeholders for favourite club,
+   favourite player and football philosophy.
+   NO FIFA-style ratings or attribute numbers — storytelling over stats. */
+import { $ } from "../lib/dom.js";
 import { Avatar, themeLabel } from "./Avatar.js";
 import { byId } from "../data/squad.js";
 import { FULL_POS } from "../lib/positions.js";
 
 let modal, lastFocused;
+const SOON = `<span class="pmodal__soon">Coming Soon</span>`;
 
 function ensureModal() {
   if (modal) return modal;
@@ -29,14 +32,9 @@ function ensureModal() {
   return modal;
 }
 
-function statGrid(p) {
-  const max = Math.max(...Object.values(p.attrs));
-  return Object.entries(p.attrs).map(([k, v], i) => `
-    <div class="pmodal-stat" style="--i:${i}">
-      <div class="pmodal-stat__top"><span>${k}</span><b class="${v === max ? "is-top" : ""}">${v}</b></div>
-      <div class="pmodal-stat__bar"><i style="--v:${v}%"></i></div>
-    </div>`).join("");
-}
+/* a vitals chip — only rendered when the value exists */
+const chip = (value, label) => value == null || value === ""
+  ? "" : `<div><b>${value}</b><span>${label}</span></div>`;
 
 export function openModal(idOrPlayer) {
   const p = typeof idOrPlayer === "object" ? idOrPlayer : byId[idOrPlayer];
@@ -44,45 +42,46 @@ export function openModal(idOrPlayer) {
   ensureModal();
   const theme = themeLabel(p);
 
+  const vitals = [
+    chip(p.age, "Age"),
+    chip(p.height_cm ? `${p.height_cm} cm` : null, "Height"),
+    chip(p.weight_kg ? `${p.weight_kg} kg` : null, "Weight"),
+    chip(`#${p.number}`, "Number"),
+  ].join("");
+
+  const mottoBlock = p.motto
+    ? `<blockquote class="pmodal__quote">“${p.motto}”</blockquote>`
+    : `<blockquote class="pmodal__quote pmodal__quote--soon">Player motto ${SOON}</blockquote>`;
+
   modal.querySelector(".pmodal__content").innerHTML = `
-    <div class="pmodal__hero" data-group="${p.posGroup}">
+    <div class="pmodal__hero" data-archetype="${p.archetype}">
       <span class="pmodal__num">${String(p.number).padStart(2, "0")}</span>
       <div class="pmodal__avatar">${Avatar(p, `modal-${p.id}`, 220)}</div>
       <div class="pmodal__id">
         <span class="pmodal__archetype">${theme}</span>
         <h3 class="pmodal__name">${p.name}</h3>
         <span class="pmodal__pos">${FULL_POS[p.position] || p.position} · #${p.number}</span>
-        <div class="pmodal__ovr"><b>${p.ovr}</b><span>Overall</span></div>
       </div>
     </div>
 
     <div class="pmodal__body">
       <div class="pmodal__col">
         <div class="pmodal__block">
-          <h4 class="pmodal__h">Biography</h4>
-          <p class="pmodal__bio">${p.bio}</p>
+          <h4 class="pmodal__h">Profile</h4>
+          <div class="pmodal__vitals">${vitals}</div>
         </div>
-        <div class="pmodal__block">
-          <h4 class="pmodal__h">Vitals</h4>
-          <div class="pmodal__vitals">
-            <div><b>${(p.height_cm / 100).toFixed(2)}m</b><span>Height</span></div>
-            <div><b>${p.weight_kg}kg</b><span>Weight</span></div>
-            <div><b>${p.age}</b><span>Age</span></div>
-            <div><b>${p.foot === "R" ? "Right" : "Left"}</b><span>Foot</span></div>
-          </div>
-        </div>
-        <div class="pmodal__block">
-          <h4 class="pmodal__h">Favourite Player</h4>
-          <p class="pmodal__fav">${p.favPlayer}</p>
-        </div>
+        ${mottoBlock}
       </div>
 
       <div class="pmodal__col">
         <div class="pmodal__block">
-          <h4 class="pmodal__h">Attributes</h4>
-          <div class="pmodal__stats">${statGrid(p)}</div>
+          <h4 class="pmodal__h">Off the pitch</h4>
+          <dl class="pmodal__facts">
+            <div><dt>Favourite Club</dt><dd>${p.favClub || SOON}</dd></div>
+            <div><dt>Favourite Player</dt><dd>${p.favPlayer || SOON}</dd></div>
+            <div><dt>Football Philosophy</dt><dd>${p.philosophy || SOON}</dd></div>
+          </dl>
         </div>
-        <blockquote class="pmodal__quote">“${p.quote}”</blockquote>
       </div>
     </div>`;
 
@@ -90,11 +89,6 @@ export function openModal(idOrPlayer) {
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
-
-  // animate stat bars after the open transition
-  requestAnimationFrame(() => {
-    setTimeout(() => $$(".pmodal-stat", modal).forEach(s => s.classList.add("is-live")), 220);
-  });
   modal.querySelector(".pmodal__close")?.focus();
 }
 

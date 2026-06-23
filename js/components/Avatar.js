@@ -9,18 +9,20 @@
      ST  → The Finisher  (crimson) flame aura
 */
 
+/* Themes keyed by archetype label (the source of truth in squad data). */
 const THEME = {
-  GK:  { label: "The Wall",      c1: "#22d3ee", c2: "#0e7490", aura: "#22d3ee" },
-  DEF: { label: "The Guardian",  c1: "#9d86ff", c2: "#4f46e5", aura: "#7c5cff" },
-  MID: { label: "The Engine",    c1: "#3dffb8", c2: "#0ea66e", aura: "#00f5a0" },
-  WING:{ label: "The Lightning", c1: "#ffe49a", c2: "#f59e0b", aura: "#ffd76a" },
-  FWD: { label: "The Finisher",  c1: "#ff6b7e", c2: "#e22945", aura: "#ff3d58" },
+  "The Wall":      { label: "The Wall",      c1: "#22d3ee", c2: "#0e7490", aura: "#22d3ee" },
+  "The Guardian":  { label: "The Guardian",  c1: "#9d86ff", c2: "#4f46e5", aura: "#7c5cff" },
+  "The Engine":    { label: "The Engine",    c1: "#3dffb8", c2: "#0ea66e", aura: "#00f5a0" },
+  "The Lightning": { label: "The Lightning", c1: "#ffe49a", c2: "#f59e0b", aura: "#ffd76a" },
+  "The Finisher":  { label: "The Finisher",  c1: "#ff6b7e", c2: "#e22945", aura: "#ff3d58" },
 };
 
-/** Wingers get the Lightning theme even though posGroup is FWD. */
+/* Fallback by position group if a player has no explicit archetype. */
+const GROUP_FALLBACK = { GK: "The Wall", DEF: "The Guardian", MID: "The Engine", FWD: "The Finisher" };
+
 export function themeFor(p) {
-  if (p.position === "RW" || p.position === "LW") return THEME.WING;
-  return THEME[p.posGroup] || THEME.MID;
+  return THEME[p.archetype] || THEME[GROUP_FALLBACK[p.posGroup]] || THEME["The Engine"];
 }
 
 export function themeLabel(p) { return themeFor(p).label; }

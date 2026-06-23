@@ -9,7 +9,7 @@ import { FULL_POS } from "../lib/positions.js";
 export function BrotherCard(p, i = 0) {
   const theme = themeLabel(p);
   return `
-  <article class="bro-card" data-id="${p.id}" data-group="${p.posGroup}" data-pos="${p.position}"
+  <article class="bro-card" data-id="${p.id}" data-group="${p.posGroup}" data-archetype="${p.archetype}"
            style="--i:${i}" tabindex="0" role="button" aria-label="Open ${p.name}'s profile">
     <div class="bro-card__glow" aria-hidden="true"></div>
     <span class="bro-card__num" aria-hidden="true">${String(p.number).padStart(2, "0")}</span>
