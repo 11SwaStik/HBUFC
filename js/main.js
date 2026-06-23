@@ -31,6 +31,27 @@ function renderFormation() {
     });
   });
 
+  // Chemistry Mode toggle (the badge itself is the button)
+  const chemBtn = $("#chemToggle");
+  const passBtn = $("#passToggle");
+  chemBtn?.addEventListener("click", () => {
+    const on = api.setChemMode(!api.chemMode);
+    chemBtn.setAttribute("aria-pressed", String(on));
+    chemBtn.classList.toggle("is-on", on);
+    if (passBtn) {                       // passing mode only available with chemistry on
+      passBtn.hidden = !on;
+      passBtn.setAttribute("aria-pressed", "false");
+      passBtn.classList.remove("is-on");
+    }
+  });
+
+  // Passing Mode toggle
+  passBtn?.addEventListener("click", () => {
+    const on = api.setPassMode(!api.passMode);
+    passBtn.setAttribute("aria-pressed", String(on));
+    passBtn.classList.toggle("is-on", on);
+  });
+
   updateChem("4-3-3");
   api.select(9); // default highlight to seed the chemistry view
 }

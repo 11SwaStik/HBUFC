@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="css/carousel.css" />
   <link rel="stylesheet" href="css/brand.css" />
   <link rel="stylesheet" href="css/mascot.css" />
+  <link rel="stylesheet" href="css/chemistry.css" />
 
   <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -163,9 +164,16 @@ who were overlooked.</h2>
               <button class="form-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
               <button class="form-switch__btn" data-formation="3-5-2">3-5-2</button>
             </div>
-            <div class="chem">
-              <span class="chem__label">Chemistry</span>
-              <span class="chem__val" id="chemScore">0</span>
+            <div class="chem-controls">
+              <button class="chem" id="chemToggle" type="button" aria-pressed="false" title="Toggle Chemistry Mode">
+                <span class="chem__dot" aria-hidden="true"></span>
+                <span class="chem__label">Chemistry</span>
+                <span class="chem__val" id="chemScore">0</span>
+              </button>
+              <button class="pass-toggle" id="passToggle" type="button" aria-pressed="false" hidden title="Toggle Passing Mode">
+                <span class="pass-toggle__ball" aria-hidden="true"></span>
+                <span>Passing</span>
+              </button>
             </div>
           </div>
 
@@ -177,7 +185,7 @@ who were overlooked.</h2>
             </div>
             <!-- players + tooltip injected by JS -->
           </div>
-          <p class="formation__hint">Tap a player to highlight · hover to trace chemistry links</p>
+          <p class="formation__hint">Tap a player to highlight · click <b>Chemistry</b> to see the team connect</p>
         </div>
       </div>
     </section>

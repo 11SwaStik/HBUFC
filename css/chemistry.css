@@ -1,0 +1,105 @@
+/* ====================================================================
+   HBUFC — Interactive Chemistry Mode + Passing Mode
+   Pure CSS/SVG, no libraries, no canvas. Animations use stroke-dashoffset
+   and offset-distance (compositor-friendly) for 60fps. Mobile responsive.
+   ==================================================================== */
+
+/* ---------- toggle controls ---------- */
+.chem-controls{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* the Chemistry badge is now a button */
+.chem{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;cursor:pointer;
+  background:var(--surface);border:1px solid var(--border-glass);color:inherit;
+  transition:border-color var(--dur) var(--ease-out),box-shadow var(--dur) var(--ease-out),transform var(--dur)}
+.chem:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--neon-cyan) 50%,transparent)}
+.chem__dot{width:9px;height:9px;border-radius:50%;background:var(--text-dim);transition:all var(--dur)}
+.chem.is-on{border-color:color-mix(in srgb,var(--neon-cyan) 70%,transparent);
+  box-shadow:0 0 18px -4px var(--neon-cyan)}
+.chem.is-on .chem__dot{background:var(--neon-cyan);box-shadow:0 0 10px var(--neon-cyan);
+  animation:chemDotPulse 1.6s var(--ease-inout) infinite}
+@keyframes chemDotPulse{50%{opacity:.5}}
+
+/* Passing toggle (revealed only when chemistry is on) */
+.pass-toggle{display:inline-flex;align-items:center;gap:8px;padding:8px 15px;border-radius:999px;cursor:pointer;
+  font-size:.85rem;color:var(--text-muted);background:var(--surface);border:1px solid var(--border-glass);
+  transition:all var(--dur) var(--ease-out)}
+.pass-toggle:hover{transform:translateY(-1px);color:#fff;border-color:color-mix(in srgb,var(--gold) 50%,transparent)}
+.pass-toggle__ball{width:13px;height:13px;border-radius:50%;flex:0 0 auto;
+  background:radial-gradient(circle at 35% 30%,#fff 0 40%,#0a0c14 41% 100%)}
+.pass-toggle.is-on{color:#1a0509;background:var(--grad-brand);border-color:transparent;
+  box-shadow:0 6px 18px -4px color-mix(in srgb,var(--crimson) 70%,transparent)}
+
+/* ---------- pitch darkening when chemistry is ON ---------- */
+.pitch{transition:filter .5s var(--ease-out)}
+.pitch.chem-mode{filter:saturate(.92)}
+.pitch.chem-mode .pitch__glow{opacity:.4}
+/* darkening veil sits above the turf but below links + tokens */
+.pitch.chem-mode::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 45%,rgba(4,5,10,.35),rgba(4,5,10,.62));
+  animation:chemVeilIn .5s var(--ease-out)}
+@keyframes chemVeilIn{from{opacity:0}to{opacity:1}}
+
+/* links layer needs to sit above the veil in chem mode */
+.pitch__links{z-index:2}
+.pitch__player{z-index:3}      /* already set elsewhere; ensured above links */
+.pitch__tip{z-index:6}
+
+/* ---------- chemistry links ---------- */
+/* base + glow are hidden until chem mode (outside chem mode the old subtle
+   per-selection highlight still works via .is-active) */
+.chem-link__base{stroke:rgba(255,255,255,.10);stroke-width:.5;opacity:0;transition:opacity .4s}
+.chem-link__glow{stroke:var(--neon-cyan);stroke-width:.6;opacity:0;stroke-linecap:round;
+  filter:drop-shadow(0 0 1.4px var(--neon-cyan));transition:opacity .4s}
+.chem-link__flow{stroke:#eaffff;stroke-width:1.1;opacity:0;stroke-linecap:round;
+  /* a short lit dash that travels the line: dash = 8 units lit, rest = full length gap */
+  stroke-dasharray:6 var(--len);stroke-dashoffset:var(--len);
+  filter:drop-shadow(0 0 2px var(--neon-cyan))}
+
+/* when chem mode is on, reveal all links + run the traveling light */
+.pitch.chem-mode .chem-link__base{opacity:1}
+.pitch.chem-mode .chem-link__glow{opacity:.55}
+.pitch.chem-mode .chem-link__flow{opacity:.95;
+  animation:chemFlow 2.4s linear infinite}
+@keyframes chemFlow{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:calc(var(--len) * -1 - 6)}}
+
+/* hover isolation: dim all links, spotlight only the hovered player's */
+.pitch.chem-mode.chem-hover .chem-link{opacity:.12;transition:opacity .25s}
+.pitch.chem-mode.chem-hover .chem-link.is-active{opacity:1}
+.pitch.chem-mode.chem-hover .chem-link.is-active .chem-link__glow{stroke:var(--gold);
+  filter:drop-shadow(0 0 2.5px var(--gold));opacity:.9}
+.pitch.chem-mode.chem-hover .chem-link.is-active .chem-link__flow{stroke:#fff8e6;
+  filter:drop-shadow(0 0 3px var(--gold))}
+
+/* players dim/lift on hover-isolation */
+.pitch.chem-mode .pitch__player{transition:opacity .25s,filter .25s,transform var(--dur)}
+.pitch.chem-mode .pitch__player.is-dim{opacity:.3;filter:saturate(.5)}
+.pitch.chem-mode .pitch__player.is-near .pp-dot{box-shadow:0 0 0 3px var(--gold),0 0 18px var(--gold)}
+
+/* outside chem mode: keep the legacy single-link highlight on selection */
+.chem-link.is-active .chem-link__glow{opacity:.7}
+.chem-link.is-active .chem-link__base{opacity:.5}
+
+/* ---------- Passing Mode: ball traveling the tour path ---------- */
+.pitch__ball{position:absolute;top:0;left:0;width:clamp(16px,2.4vw,26px);height:clamp(16px,2.4vw,26px);
+  z-index:4;opacity:0;pointer-events:none;
+  offset-rotate:0deg;offset-distance:0%;
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+.pitch__ball svg{display:block;width:100%;height:100%;animation:ballSpin 1.6s linear infinite}
+.pitch.pass-on .pitch__ball{opacity:1;animation:ballTravel 9s linear infinite}
+@keyframes ballTravel{from{offset-distance:0%}to{offset-distance:100%}}
+@keyframes ballSpin{to{transform:rotate(360deg)}}
+
+/* ---------- reduced motion: keep it calm ---------- */
+@media (prefers-reduced-motion:reduce){
+  .chem-link__flow{animation:none!important;opacity:.6!important;stroke-dashoffset:0;stroke-dasharray:none}
+  .pitch.pass-on .pitch__ball{animation:none!important}
+  .pitch__ball svg{animation:none!important}
+  .chem.is-on .chem__dot{animation:none!important}
+}
+
+/* ---------- mobile ---------- */
+@media (max-width:560px){
+  .chem-controls{width:100%;justify-content:center}
+  .chem-link__glow{stroke-width:.8}
+  .chem-link__flow{stroke-width:1.4}
+}

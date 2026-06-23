@@ -172,10 +172,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:none}
 .pl-six-bot{bottom:10px;left:50%;width:24%;height:7%;transform:translateX(-50%);border-bottom:none}
 
 .pitch__links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
-.pitch__link{stroke:var(--neon-cyan);stroke-width:.5;transition:opacity .3s}
-.pitch__link--hot{stroke:var(--gold);stroke-width:.8;filter:drop-shadow(0 0 2px var(--gold));
-  stroke-dasharray:3 2;animation:dash 1s linear infinite}
-@keyframes dash{to{stroke-dashoffset:-10}}
+/* chemistry link visuals live in chemistry.css */
 
 /* ===================== FOOTER ===================== */
 .footer{position:relative;z-index:1;border-top:1px solid var(--border-glass);padding:48px 0;background:rgba(4,5,10,.6)}
