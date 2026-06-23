@@ -7,6 +7,7 @@ import { $ } from "../lib/dom.js";
 import { Avatar, themeLabel } from "./Avatar.js";
 import { byId } from "../data/squad.js";
 import { FULL_POS } from "../lib/positions.js";
+import { ARCHETYPES } from "../data/archetypes.js";
 
 let modal, lastFocused;
 const SOON = `<span class="pmodal__soon">Coming Soon</span>`;
@@ -41,6 +42,7 @@ export function openModal(idOrPlayer) {
   if (!p) return;
   ensureModal();
   const theme = themeLabel(p);
+  const arch = ARCHETYPES[p.archetype] || {};
 
   const vitals = [
     chip(p.age, "Age"),
@@ -53,19 +55,27 @@ export function openModal(idOrPlayer) {
     ? `<blockquote class="pmodal__quote">“${p.motto}”</blockquote>`
     : `<blockquote class="pmodal__quote pmodal__quote--soon">Player motto ${SOON}</blockquote>`;
 
-  modal.querySelector(".pmodal__content").innerHTML = `
+  const content = modal.querySelector(".pmodal__content");
+  content.style.setProperty("--pc", arch.accent || "var(--crimson)");
+  content.innerHTML = `
     <div class="pmodal__hero" data-archetype="${p.archetype}">
       <span class="pmodal__num">${String(p.number).padStart(2, "0")}</span>
       <div class="pmodal__avatar">${Avatar(p, `modal-${p.id}`, 220)}</div>
       <div class="pmodal__id">
         <span class="pmodal__archetype">${theme}</span>
         <h3 class="pmodal__name">${p.name}</h3>
+        ${p.nickname ? `<span class="pmodal__nick">“${p.nickname}”</span>` : ""}
         <span class="pmodal__pos">${FULL_POS[p.position] || p.position} · #${p.number}</span>
       </div>
     </div>
 
     <div class="pmodal__body">
       <div class="pmodal__col">
+        ${p.trait ? `
+        <div class="pmodal__signature">
+          <span class="pmodal__sig-label">Signature</span>
+          <span class="pmodal__sig-trait">${p.trait}</span>
+        </div>` : ""}
         <div class="pmodal__block">
           <h4 class="pmodal__h">Profile</h4>
           <div class="pmodal__vitals">${vitals}</div>
@@ -74,6 +84,10 @@ export function openModal(idOrPlayer) {
       </div>
 
       <div class="pmodal__col">
+        <div class="pmodal__block">
+          <h4 class="pmodal__h">${theme}</h4>
+          <p class="pmodal__arch-desc">${arch.desc || ""}</p>
+        </div>
         <div class="pmodal__block">
           <h4 class="pmodal__h">Off the pitch</h4>
           <dl class="pmodal__facts">
