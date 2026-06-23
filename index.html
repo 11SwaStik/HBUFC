@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/brotherhood.css" />
   <link rel="stylesheet" href="css/carousel.css" />
   <link rel="stylesheet" href="css/brand.css" />
+  <link rel="stylesheet" href="css/mascot.css" />
 
   <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -84,6 +85,10 @@
       <!-- low-opacity logo watermark, integrated with the gradients -->
       <div class="hero__watermark" id="heroWatermark" data-parallax="0.12" aria-hidden="true">
         <img src="assets/logo-mark.png" alt="" />
+      </div>
+      <!-- supporting mascot — secondary to logo, tucked in the corner -->
+      <div class="mascot mascot--hero" data-parallax="0.06" aria-hidden="true">
+        <img src="assets/mascoty.png" alt="" />
       </div>
       <div class="hero__particles" id="particles" aria-hidden="true"></div>
       <div class="hero__inner container">
@@ -179,6 +184,11 @@ who were overlooked.</h2>
 
     <!-- ===== 4b. MEET THE BROTHERHOOD (horizontal carousel) ===== -->
     <section class="section section--brotherhood" id="brotherhood">
+      <!-- supporting mascot with quote — decorative, secondary to content -->
+      <div class="mascot mascot--brotherhood" data-parallax="0.08" aria-hidden="true">
+        <img src="assets/mascoty.png" alt="" />
+        <span class="mascot__quote">“Every player has a story.”</span>
+      </div>
       <div class="container">
         <header class="section-head reveal">
           <span class="section-head__eyebrow">The Family</span>
@@ -264,6 +274,10 @@ It's how we grow.</h2>
   </main>
 
   <footer class="footer">
+    <!-- smaller supporting mascot — decorative -->
+    <div class="mascot mascot--footer" aria-hidden="true">
+      <img src="assets/mascoty.png" alt="" />
+    </div>
     <div class="container">
       <div class="footer__brand-block">
         <a href="#home" class="footer__logo" aria-label="HBUFC home">

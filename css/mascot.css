@@ -1,0 +1,39 @@
+/* ====================================================================
+   HBUFC — Soldier (supporting mascot)
+   Decorative only. Secondary to the logo. Image is never modified —
+   only scaled/positioned. Uses existing design-system tokens.
+   Animations: gentle float + subtle breathing; parallax via data-parallax.
+   ==================================================================== */
+
+.mascot{position:absolute;z-index:2;pointer-events:none;will-change:transform}
+.mascot img{display:block;width:100%;height:auto;
+  filter:drop-shadow(0 18px 34px rgba(0,0,0,.5))}
+
+/* float + breathing combine on the <img> so the wrapper stays free for parallax */
+@keyframes mascotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes mascotBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+.mascot img{animation:mascotFloat 6.5s var(--ease-inout) infinite,
+                      mascotBreathe 4s var(--ease-inout) infinite}
+
+/* ---------- HERO: tucked into a bottom corner, behind the content ---------- */
+.mascot--hero{right:clamp(-10px,2vw,40px);bottom:0;width:clamp(120px,16vw,230px);
+  opacity:.9;z-index:2}
+@media (max-width:760px){.mascot--hero{width:120px;opacity:.7;right:-6px}}
+@media (max-width:480px){.mascot--hero{display:none}} /* keep logo+headline focus on phones */
+
+/* ---------- BROTHERHOOD: side mascot with quote ---------- */
+.mascot--brotherhood{left:clamp(-12px,2vw,32px);top:clamp(40px,8vw,90px);
+  width:clamp(110px,12vw,180px);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.92}
+.mascot__quote{font-family:var(--font-display);font-size:clamp(.8rem,1.4vw,1rem);color:var(--text-muted);
+  text-align:center;max-width:200px;line-height:1.35;letter-spacing:.01em}
+/* on narrower screens it would crowd the carousel — hide it, content stays untouched */
+@media (max-width:1180px){.mascot--brotherhood{display:none}}
+
+/* ---------- FOOTER: smaller, in a corner ---------- */
+.mascot--footer{right:clamp(-6px,2vw,28px);bottom:0;width:clamp(70px,8vw,116px);opacity:.8}
+@media (max-width:680px){.mascot--footer{width:72px;opacity:.6;right:-4px}}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion:reduce){
+  .mascot img{animation:none}
+}
