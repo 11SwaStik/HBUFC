@@ -3,11 +3,7 @@
    view (height, weight, age, bio, skill ratings, motto).
    OVR count-up + skill-bar fills are triggered via .is-live class by the caller. */
 import { Avatar, themeLabel } from "./Avatar.js";
-
-const FULL_POS = {
-  GK: "Goalkeeper", RB: "Right Back", CB: "Centre Back", LB: "Left Back",
-  CM: "Central Mid", CAM: "Attacking Mid", RW: "Right Wing", LW: "Left Wing", ST: "Striker",
-};
+import { FULL_POS } from "../lib/positions.js";
 
 export function PlayerProfile(p) {
   const theme = themeLabel(p);

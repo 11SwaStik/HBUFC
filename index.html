@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/sections.css" />
   <link rel="stylesheet" href="css/brotherhood.css" />
+  <link rel="stylesheet" href="css/carousel.css" />
 
   <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -53,9 +54,9 @@
       <ul class="nav__links" id="navLinks">
         <li><a href="#story" class="nav__link">Story</a></li>
         <li><a href="#values" class="nav__link">Values</a></li>
+        <li><a href="#formation" class="nav__link">Formation</a></li>
         <li><a href="#brotherhood" class="nav__link">Brotherhood</a></li>
         <li><a href="#journey" class="nav__link">Journey</a></li>
-        <li><a href="#impact" class="nav__link">Impact</a></li>
         <li><a href="#join" class="nav__link nav__link--cta">Join</a></li>
       </ul>
     </nav>
@@ -125,13 +126,13 @@ who were overlooked.</h2>
       </div>
     </section>
 
-    <!-- ===== 4. MEET THE BROTHERHOOD (player showcase) ===== -->
-    <section class="section" id="brotherhood">
+    <!-- ===== 4a. THE FORMATION (tactical view) ===== -->
+    <section class="section" id="formation">
       <div class="container">
         <header class="section-head brother-intro reveal">
-          <span class="section-head__eyebrow">Meet the Brotherhood</span>
-          <h2 class="section-head__title">Step onto the pitch</h2>
-          <p class="section-head__lead">Eleven characters, one formation. Tap any player to open their profile.</p>
+          <span class="section-head__eyebrow">The Formation</span>
+          <h2 class="section-head__title">Eleven as one</h2>
+          <p class="section-head__lead">The shape of the brotherhood. Tap a player to read them on the board.</p>
         </header>
 
         <div class="brotherhood reveal">
@@ -165,6 +166,31 @@ who were overlooked.</h2>
             <div class="player-profile" id="playerProfile"><!-- JS: PlayerProfile --></div>
           </aside>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== 4b. MEET THE BROTHERHOOD (horizontal carousel) ===== -->
+    <section class="section section--brotherhood" id="brotherhood">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">Meet the Brotherhood</span>
+          <h2 class="section-head__title">One by one</h2>
+          <p class="section-head__lead">Not a database — a brotherhood. Glide across, meet each member, open their story.</p>
+        </header>
+      </div>
+
+      <!-- full-bleed carousel -->
+      <div class="bro-carousel reveal">
+        <button class="bro-nav bro-nav--prev" id="broPrev" aria-label="Previous players">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="bro-track" id="broTrack" role="list"><!-- JS: BrotherCard --></div>
+        <button class="bro-nav bro-nav--next" id="broNext" aria-label="Next players">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="container">
+        <div class="bro-progress" aria-hidden="true"><span id="broProgress"></span></div>
       </div>
     </section>
 

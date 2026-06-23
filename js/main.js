@@ -6,6 +6,8 @@ import { $, $$ } from "./lib/dom.js";
 import { club } from "./data/club.js";
 import { players, byId } from "./data/squad.js";
 import { PlayerProfile } from "./components/PlayerProfile.js";
+import { BrotherCard } from "./components/BrotherCard.js";
+import { openModal } from "./components/PlayerModal.js";
 import { mountPitch, chemistryScore } from "./components/Pitch.js";
 import { renderValues } from "./components/Values.js";
 import { renderJourney } from "./components/Journey.js";
@@ -57,6 +59,43 @@ function renderBrotherhood() {
 function updateChem(key) {
   const el = $("#chemScore");
   if (el) el.textContent = chemistryScore(key);
+}
+
+/* ---------- Brotherhood carousel (horizontal snap-scroll) ---------- */
+function renderBrotherhoodCarousel() {
+  const track = $("#broTrack");
+  if (!track) return;
+  track.innerHTML = players.map((p, i) => BrotherCard(p, i)).join("");
+
+  const open = (card) => { const id = +card.dataset.id; if (id) openModal(id); };
+  track.addEventListener("click", (e) => {
+    const card = e.target.closest(".bro-card");
+    if (card) open(card);
+  });
+  track.addEventListener("keydown", (e) => {
+    const card = e.target.closest(".bro-card");
+    if (card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); open(card); }
+  });
+
+  // arrow controls scroll the track by ~one card
+  const scrollBy = (dir) => {
+    const card = track.querySelector(".bro-card");
+    const amount = card ? card.offsetWidth + 22 : 320;
+    track.scrollBy({ left: dir * amount, behavior: "smooth" });
+  };
+  $("#broPrev")?.addEventListener("click", () => scrollBy(-1));
+  $("#broNext")?.addEventListener("click", () => scrollBy(1));
+
+  // progress bar reflects horizontal scroll position
+  const bar = $("#broProgress");
+  if (bar) {
+    const onScroll = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      bar.style.transform = `scaleX(${max > 0 ? track.scrollLeft / max : 0})`;
+    };
+    track.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
 }
 
 /* OVR (and any always-visible counters) count up on swap */
@@ -147,6 +186,7 @@ function mouseLight() {
 /* ---------- boot ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   renderBrotherhood();
+  renderBrotherhoodCarousel();
   renderValues($("#valuesGrid"));
   renderJourney($("#journeyList"));
   renderImpact($("#impactGrid"));
