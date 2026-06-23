@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/brand.css" />
   <link rel="stylesheet" href="css/mascot.css" />
   <link rel="stylesheet" href="css/chemistry.css" />
+  <link rel="stylesheet" href="css/origins.css" />
 
   <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -35,15 +36,23 @@
   <script defer src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
 </head>
 <body>
-  <!-- ===== Loading experience (official logo reveal) ===== -->
+  <!-- ===== Loading experience — football "kickoff" loader ===== -->
   <div class="loader" id="loader" role="status" aria-label="Loading HBUFC">
     <div class="loader__inner">
-      <div class="loader__badge">
-        <span class="loader__ring" aria-hidden="true"></span>
-        <img class="loader__logo" src="assets/logo-mark.png" alt="HBUFC crest" width="150" height="150" />
+      <span class="loader__crest">HBU<b>FC</b></span>
+
+      <!-- the football IS the loading indicator: it rolls + spins along a pitch line -->
+      <div class="loader__pitch" aria-hidden="true">
+        <span class="loader__line"></span>
+        <span class="loader__ball">
+          <svg viewBox="0 0 24 24" width="100%" height="100%">
+            <circle cx="12" cy="12" r="11" fill="#f6f8fc" stroke="#0a0c14" stroke-width="1"/>
+            <path fill="#0a0c14" d="M12 6.2l3.2 2.3-1.2 3.7h-4L8.8 8.5 12 6.2zm-6.4 4l2.6.2 1.2 3.6-2.1 1.8-2.4-1.6.7-4zm12.8 0l.7 4-2.4 1.6-2.1-1.8 1.2-3.6 2.6-.2zM9 17.6l-1-2.5 2.1-1.8h3.8l2.1 1.8-1 2.5H9z"/>
+          </svg>
+        </span>
       </div>
-      <span class="loader__word">Football for All</span>
-      <span class="loader__bar" aria-hidden="true"><i></i></span>
+
+      <span class="loader__word">Football&nbsp;for&nbsp;All</span>
     </div>
   </div>
 
@@ -60,7 +69,8 @@
     <nav class="nav container">
       <a href="#home" class="brand" aria-label="HBUFC home">
         <span class="brand__logo">
-          <img src="assets/logo-mark.png" alt="HBUFC crest" width="42" height="42" />
+          <img src="assets/logo-mark.png" alt="HBUFC crest" width="54" height="54"
+               onerror="this.closest('.brand__logo').classList.add('logo-failed');this.remove();" />
         </span>
         <span class="brand__name">HBU<b>FC</b></span>
       </a>
@@ -121,21 +131,72 @@
       </a>
     </section>
 
-    <!-- ===== 2. OUR STORY ===== -->
+    <!-- ===== 2. ORIGINS TIMELINE ===== -->
     <section class="section" id="story">
       <div class="container">
-        <div class="story" data-lines>
-          <span class="story__eyebrow line">Our Story</span>
-          <h2 class="story__heading line">Born from those
-who were overlooked.</h2>
-          <div class="story__body">
-            <p class="line">In 2017, in the lanes of Ajmer, talent was everywhere — but opportunity wasn't.</p>
-            <p class="line">Favouritism and closed circles decided who played and who watched. Gifted footballers were turned away, not for a lack of skill, but for a lack of connections.</p>
-            <p class="line">HBUFC was built to break that wall. One belief held it up:</p>
-          </div>
-          <blockquote class="story__belief line">Everyone deserves an <b>opportunity</b> to play football.</blockquote>
-          <p class="story__closing line">No gatekeepers. No favourites. Just the game, open to all.</p>
-        </div>
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">Origins</span>
+          <h2 class="section-head__title">How it began</h2>
+          <p class="section-head__lead">The real history of HBUFC — from a fair chance to play, to a brotherhood.</p>
+        </header>
+
+        <ol class="origins">
+          <!-- 1 — image left -->
+          <li class="origin origin--left reveal">
+            <figure class="origin__media">
+              <img src="assets/origins/01-founding-news.jpeg" alt="Newspaper clipping of HBUFC's founding tournament in Ajmer, 2017" loading="lazy" />
+              <span class="origin__vignette" aria-hidden="true"></span>
+            </figure>
+            <div class="origin__body">
+              <span class="origin__year">2017</span>
+              <h3 class="origin__title">The Beginning</h3>
+              <p class="origin__text">Before the tournaments, before the milestones, there was a small group of footballers who simply wanted a fair chance to play.</p>
+            </div>
+            <span class="origin__node" aria-hidden="true"></span>
+          </li>
+
+          <!-- 2 — image right -->
+          <li class="origin origin--right reveal">
+            <figure class="origin__media">
+              <img src="assets/origins/02-debut-article.jpeg" alt="Article covering HBUFC's debut in organized local football" loading="lazy" />
+              <span class="origin__vignette" aria-hidden="true"></span>
+            </figure>
+            <div class="origin__body">
+              <span class="origin__year">First Steps</span>
+              <h3 class="origin__title">Into Competition</h3>
+              <p class="origin__text">As HBUFC entered local football, the dream began moving from the training ground to organized competition.</p>
+            </div>
+            <span class="origin__node" aria-hidden="true"></span>
+          </li>
+
+          <!-- 3 — image left -->
+          <li class="origin origin--left reveal">
+            <figure class="origin__media">
+              <img src="assets/origins/03-match-lineup.jpeg" alt="HBUFC players lined up before a match in Ajmer" loading="lazy" />
+              <span class="origin__vignette" aria-hidden="true"></span>
+            </figure>
+            <div class="origin__body">
+              <span class="origin__year">Growing Together</span>
+              <h3 class="origin__title">The Lessons</h3>
+              <p class="origin__text">Football taught us discipline, respect and teamwork long before it taught us how to win.</p>
+            </div>
+            <span class="origin__node" aria-hidden="true"></span>
+          </li>
+
+          <!-- 4 — image right -->
+          <li class="origin origin--right reveal">
+            <figure class="origin__media">
+              <img src="assets/origins/04-brotherhood-photo.jpeg" alt="The HBUFC brotherhood together on the pitch" loading="lazy" />
+              <span class="origin__vignette" aria-hidden="true"></span>
+            </figure>
+            <div class="origin__body">
+              <span class="origin__year">The Brotherhood</span>
+              <h3 class="origin__title">One Club, One Brotherhood</h3>
+              <p class="origin__text">What started as a football team became a community. One club. One brotherhood.</p>
+            </div>
+            <span class="origin__node" aria-hidden="true"></span>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -292,7 +353,8 @@ It's how we grow.</h2>
     <div class="container">
       <div class="footer__brand-block">
         <a href="#home" class="footer__logo" aria-label="HBUFC home">
-          <img src="assets/logo-mark.png" alt="HBUFC crest" width="96" height="96" />
+          <img src="assets/logo-mark.png" alt="HBUFC crest" width="96" height="96"
+               onerror="this.closest('.footer__logo').classList.add('logo-failed');this.remove();" />
         </a>
         <span class="footer__slogan">Football for All</span>
         <div class="footer__meta">
