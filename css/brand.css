@@ -85,63 +85,26 @@ body.is-loading{overflow:hidden}
 /* ====================================================================
    NAVBAR LOGO
    ==================================================================== */
-.brand__logo{position:relative;width:54px;height:54px;flex:0 0 auto;display:grid;place-items:center;
-  transition:transform var(--dur) var(--ease-out)}
-.brand__logo::before{content:"";position:absolute;inset:-2%;border-radius:50%;z-index:0;
-  background:radial-gradient(circle at 50% 45%,
-    rgba(247,249,255,.9) 0%, rgba(232,238,250,.45) 42%, transparent 68%);
-  filter:blur(1px);transition:opacity var(--dur)}
-.brand__logo img{position:relative;z-index:1;width:50px;height:50px;object-fit:contain;display:block}
+/* clean white tile for the exact logo.png (white-bg artwork). No glow/halo/shadow. */
+.brand__logo{flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;border-radius:10px;
+  background:#fff;overflow:hidden;transition:transform var(--dur) var(--ease-out)}
+.brand__logo img{width:100%;height:100%;object-fit:contain;display:block}
 .brand{align-items:center}
-.brand:hover .brand__logo{transform:translateY(-1px) scale(1.07)}
-.brand:hover .brand__logo::before{
-  background:radial-gradient(circle at 50% 45%,
-    rgba(247,249,255,.98) 0%, rgba(232,238,250,.5) 42%, transparent 70%);
-  box-shadow:0 0 18px -2px color-mix(in srgb,var(--gold) 70%,transparent),
-             0 0 26px -6px color-mix(in srgb,var(--crimson) 60%,transparent)}
-/* ---- graceful fallback: if a logo image fails to load, the JS onerror adds
-   .logo-failed to its container. Suppress the glow/halo/ring/bloom so no
-   empty glowing circle or broken-image box is left behind. ---- */
-.brand__logo.logo-failed,.brand__logo.logo-failed::before,
-.footer__logo.logo-failed,.footer__logo.logo-failed::before{
-  background:none!important;box-shadow:none!important;animation:none!important;
-  border:none!important;width:0;height:0;opacity:0}
-/* navbar still reads as a brand via the HBUFC wordmark, which is unaffected */
+.brand:hover .brand__logo{transform:translateY(-1px)}
 
 .brand__name{transition:color var(--dur)}
 .brand:hover .brand__name b{color:var(--gold)}
-
-/* ====================================================================
-   HERO — small supporting logo mark + faint background watermark
-   Message-first: the mark is a quiet accent above the headline, not the focus.
-   ==================================================================== */
-.hero__mark{opacity:0;transform:translateY(8px);
-  animation:heroMarkIn .9s var(--ease-out) .1s forwards, heroFloat 6s var(--ease-inout) 1.2s infinite}
-@keyframes heroMarkIn{to{opacity:.9;transform:none}}
-@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-
-/* watermark: pure background support — smaller, fainter, offset below-centre so
-   it never dominates or sits dead behind the headline */
-.hero__watermark{position:absolute;inset:0;z-index:0;display:grid;place-items:center;pointer-events:none;overflow:hidden}
-.hero__watermark img{width:min(48vw,460px);max-width:none;transform:translateY(14%);
-  opacity:.04;
-  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 24%,transparent 66%);
-  mask-image:radial-gradient(circle at 50% 50%,#000 24%,transparent 66%)}
 
 /* ====================================================================
    FOOTER — dedicated brand block
    ==================================================================== */
 .footer__brand-block{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;
   padding-bottom:30px;margin-bottom:26px;border-bottom:1px solid var(--border-glass)}
-.footer__logo{position:relative;width:104px;height:104px;display:grid;place-items:center;
-  transition:transform var(--dur) var(--ease-out)}
-.footer__logo::before{content:"";position:absolute;inset:0;border-radius:50%;z-index:0;
-  background:radial-gradient(circle at 50% 45%,
-    rgba(247,249,255,.92) 0%, rgba(232,238,250,.5) 38%, rgba(195,208,234,.14) 60%, transparent 74%);
-  filter:blur(3px);transition:opacity var(--dur)}
-.footer__logo img{position:relative;z-index:1;width:82px;height:82px;object-fit:contain}
-.footer__logo:hover{transform:translateY(-3px) scale(1.04)}
-.footer__logo:hover::before{box-shadow:0 0 46px -8px color-mix(in srgb,var(--crimson) 60%,transparent)}
+/* clean white tile for the exact logo.png — no glow/halo/shadow */
+.footer__logo{display:grid;place-items:center;width:88px;height:88px;border-radius:16px;
+  background:#fff;overflow:hidden;transition:transform var(--dur) var(--ease-out)}
+.footer__logo img{width:100%;height:100%;object-fit:contain;display:block}
+.footer__logo:hover{transform:translateY(-3px)}
 .footer__slogan{font-family:var(--font-display);font-size:1.35rem;font-weight:700;
   background:var(--grad-text);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
   animation:textSheen 6s linear infinite}
@@ -156,6 +119,5 @@ body.is-loading{overflow:hidden}
    reduced motion
    ==================================================================== */
 @media (prefers-reduced-motion:reduce){
-  .hero__mark,.footer__slogan{animation:none!important}
-  .hero__mark{opacity:.9;transform:none}
+  .footer__slogan{animation:none!important}
 }

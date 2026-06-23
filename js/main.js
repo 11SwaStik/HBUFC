@@ -9,7 +9,6 @@ import { BrotherCard } from "./components/BrotherCard.js";
 import { openModal } from "./components/PlayerModal.js";
 import { mountPitch, chemistryScore } from "./components/Pitch.js";
 import { renderValues } from "./components/Values.js";
-import { renderJourney } from "./components/Journey.js";
 import { renderImpact } from "./components/Impact.js";
 import { initMotion } from "./motion/index.js";
 
@@ -185,7 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderFormation();
   renderBrotherhoodCarousel();
   renderValues($("#valuesGrid"));
-  renderJourney($("#journeyList"));
   renderImpact($("#impactGrid"));
 
   typeSlogan();

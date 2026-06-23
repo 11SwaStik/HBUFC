@@ -69,8 +69,7 @@
     <nav class="nav container">
       <a href="#home" class="brand" aria-label="HBUFC home">
         <span class="brand__logo">
-          <img src="assets/logo-mark.png" alt="HBUFC crest" width="54" height="54"
-               onerror="this.closest('.brand__logo').classList.add('logo-failed');this.remove();" />
+          <img src="assets/logo.png" alt="HBUFC" width="44" height="44" />
         </span>
         <span class="brand__name">HBU<b>FC</b></span>
       </a>
@@ -84,7 +83,6 @@
         <li><a href="#values" class="nav__link">Values</a></li>
         <li><a href="#formation" class="nav__link">Formation</a></li>
         <li><a href="#brotherhood" class="nav__link">Brotherhood</a></li>
-        <li><a href="#journey" class="nav__link">Journey</a></li>
         <li><a href="#join" class="nav__link nav__link--cta">Join</a></li>
       </ul>
     </nav>
@@ -93,21 +91,13 @@
   <main>
     <!-- ===== 1. HERO ===== -->
     <section class="hero" id="home">
-      <!-- low-opacity logo SYMBOL watermark (no text — avoids duplication) -->
-      <div class="hero__watermark" id="heroWatermark" data-parallax="0.12" aria-hidden="true">
-        <img src="assets/logo-symbol.png" alt="" />
-      </div>
-      <!-- supporting mascot — secondary to logo, tucked in the corner -->
+      <!-- logo temporarily removed from hero (per implementation fix) -->
+      <!-- supporting mascot — tucked in the corner -->
       <div class="mascot mascot--hero" data-parallax="0.06" aria-hidden="true">
         <img src="assets/mascoty.png" alt="" />
       </div>
       <div class="hero__particles" id="particles" aria-hidden="true"></div>
       <div class="hero__inner container">
-        <!-- small supporting logo mark above the message -->
-        <span class="hero__mark" id="heroCrest" data-parallax="0.1" aria-hidden="true">
-          <img src="assets/logo-symbol.png" alt="" width="64" height="60" />
-        </span>
-
         <p class="hero__eyebrow">A Football Movement • Since 2017</p>
         <h1 class="hero__title">Football for All</h1>
 
@@ -309,19 +299,7 @@
       </div>
     </section>
 
-    <!-- ===== 5. CLUB JOURNEY ===== -->
-    <section class="section" id="journey">
-      <div class="container">
-        <header class="section-head reveal">
-          <span class="section-head__eyebrow">2017 → Today</span>
-          <h2 class="section-head__title">The Journey</h2>
-          <p class="section-head__lead">From a dusty pitch to a movement — one season at a time.</p>
-        </header>
-        <ol class="jrny" id="journeyList"><!-- JS: Journey --></ol>
-      </div>
-    </section>
-
-    <!-- ===== 6. IMPACT ===== -->
+    <!-- ===== 5. IMPACT ===== -->
     <section class="section" id="impact">
       <div class="container">
         <header class="section-head reveal">
@@ -378,8 +356,7 @@ It's how we grow.</h2>
     <div class="container">
       <div class="footer__brand-block">
         <a href="#home" class="footer__logo" aria-label="HBUFC home">
-          <img src="assets/logo-mark.png" alt="HBUFC crest" width="96" height="96"
-               onerror="this.closest('.footer__logo').classList.add('logo-failed');this.remove();" />
+          <img src="assets/logo.png" alt="HBUFC" width="88" height="88" />
         </a>
         <span class="footer__slogan">Football for All</span>
         <div class="footer__meta">
