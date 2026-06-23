@@ -81,26 +81,27 @@ body.is-loading{overflow:hidden}
   /* gentle continuous float (kicks in after the reveal) */
   animation:heroFloat 6s var(--ease-inout) 1.3s infinite}
 .hero__crest-badge{position:relative;display:grid;place-items:center;width:172px;height:172px;
-  /* premium reveal: scale + fade, runs once */
-  opacity:0;transform:scale(.85) translateY(12px);
+  /* premium reveal: opacity + scale, runs once */
+  opacity:0;transform:scale(.9);
   animation:heroCrestIn 1.1s var(--ease-out) .15s forwards}
-/* feathered light bloom behind the transparent crest — no hard edge.
-   Bright region extends far enough to back the full circular mark
-   (incl. the arc text + AJMER), then feathers out into the dark. */
-.hero__crest-badge::before{content:"";position:absolute;inset:-8%;border-radius:50%;z-index:0;
-  background:radial-gradient(circle at 50% 47%,
-    rgba(248,250,255,.95) 0%, rgba(244,247,253,.9) 42%,
-    rgba(228,235,248,.55) 60%, rgba(190,205,235,.18) 74%, transparent 86%);
-  filter:blur(5px)}
-/* subtle palette ring, drawn well outside the bloom so it reads as accent, not a coin */
-.hero__crest-badge::after{content:"";position:absolute;inset:-4px;border-radius:50%;pointer-events:none;z-index:2;
-  border:1px solid transparent;
-  background:linear-gradient(135deg,var(--gold),transparent 42%,transparent 58%,var(--crimson)) border-box;
-  -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.5}
-.hero__crest-badge img{position:relative;z-index:1;width:138px;height:138px;object-fit:contain}
-@keyframes heroCrestIn{to{opacity:1;transform:none}}
+/* Soft ambient lighting in the SITE's own colours — no white, no bright halo.
+   A faint crimson→violet→gold wash that lets the logo sit on the dark theme
+   without a glowing cloud. Stays well under the mark's edge and feathers out. */
+.hero__crest-badge::before{content:"";position:absolute;inset:-30%;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 50% 45%,
+    color-mix(in srgb,var(--crimson) 18%,transparent) 0%,
+    color-mix(in srgb,var(--volt) 12%,transparent) 38%,
+    transparent 70%);
+  filter:blur(22px);
+  /* breathing: very subtle opacity + scale pulse on the ambient light */
+  animation:heroAmbient 7s var(--ease-inout) infinite}
+.hero__crest-badge img{position:relative;z-index:1;width:138px;height:138px;object-fit:contain;
+  /* keep the navy mark legible on dark with a soft dark drop-shadow, not a glow */
+  filter:drop-shadow(0 8px 22px rgba(0,0,0,.55))}
+@keyframes heroCrestIn{to{opacity:1;transform:scale(1)}}
 @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+/* gentle ambient breathing — opacity + scale only, no colour shift to white */
+@keyframes heroAmbient{0%,100%{opacity:.6;transform:scale(.96)}50%{opacity:1;transform:scale(1.06)}}
 
 .hero__watermark{position:absolute;inset:0;z-index:0;display:grid;place-items:center;pointer-events:none;overflow:hidden}
 .hero__watermark img{width:min(74vw,760px);max-width:none;
@@ -139,7 +140,7 @@ body.is-loading{overflow:hidden}
    ==================================================================== */
 @media (prefers-reduced-motion:reduce){
   .loader__logo,.loader__ring,.loader__word,.loader__bar i,
-  .hero__crest,.hero__crest-badge,.footer__slogan{animation:none!important}
+  .hero__crest,.hero__crest-badge,.hero__crest-badge::before,.footer__slogan{animation:none!important}
   .hero__crest-badge{opacity:1;transform:none}
   .loader__logo{opacity:1;transform:none}
 }
