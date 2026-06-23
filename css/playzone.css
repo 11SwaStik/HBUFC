@@ -1,0 +1,95 @@
+/* ====================================================================
+   HBUFC — Meet Our Mascot
+   Soldier (crimson kit) introduces himself with a typed speech bubble.
+   Premium, on-brand, lightweight. No game-y interaction.
+   ==================================================================== */
+
+.meet-mascot{display:grid;grid-template-columns:minmax(220px,0.85fr) 1.15fr;gap:clamp(24px,5vw,64px);
+  align-items:center;max-width:980px;margin:0 auto}
+@media (max-width:760px){.meet-mascot{grid-template-columns:1fr;text-align:center;gap:28px}}
+
+/* ---- figure (clickable easter egg: bark + kick) ---- */
+.meet-mascot__figure{position:relative;display:grid;place-items:center;isolation:isolate;
+  /* reset button chrome */
+  appearance:none;border:0;background:none;padding:0;margin:0 auto;cursor:pointer;
+  width:100%;max-width:300px}
+.meet-mascot__figure:focus-visible{outline:2px solid var(--gold);outline-offset:8px;border-radius:18px}
+.meet-mascot__halo{position:absolute;width:78%;aspect-ratio:1;border-radius:50%;z-index:-1;
+  background:radial-gradient(circle,color-mix(in srgb,var(--crimson) 26%,transparent),transparent 68%);
+  filter:blur(26px);transition:opacity var(--dur)}
+.meet-mascot__figure:hover .meet-mascot__halo{opacity:1;filter:blur(30px)}
+.meet-mascot__figure img{width:100%;max-width:280px;height:auto;display:block;
+  filter:drop-shadow(0 22px 34px rgba(0,0,0,.55));
+  animation:mascotIdle 5.5s var(--ease-inout) infinite}
+@media (max-width:760px){.meet-mascot__figure{max-width:240px}.meet-mascot__figure img{max-width:240px}}
+/* gentle idle breathing/sway */
+@keyframes mascotIdle{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+.meet-mascot__figure:hover img{transform:translateY(-4px)}
+
+/* kick "pulse" on the mascot when clicked */
+.meet-mascot__figure.is-kicking img{animation:mascotKick .5s var(--ease-out)}
+@keyframes mascotKick{0%{transform:rotate(0)}30%{transform:rotate(-5deg) translateY(-6px)}55%{transform:rotate(3deg)}100%{transform:rotate(0)}}
+
+/* ---- the ball Soldier kicks ---- */
+.meet-mascot__ball{position:absolute;bottom:6%;right:8%;width:clamp(30px,4vw,42px);height:auto;aspect-ratio:1;
+  z-index:2;pointer-events:none;opacity:.96;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+.meet-mascot__ball svg{display:block;width:100%;height:100%}
+.meet-mascot__figure.is-kicking .meet-mascot__ball{animation:ballKick .85s var(--ease-out)}
+/* the ball arcs up-and-right, spinning, then returns */
+@keyframes ballKick{
+  0%{transform:translate(0,0) rotate(0)}
+  45%{transform:translate(90px,-120px) rotate(420deg)}
+  60%{transform:translate(120px,-70px) rotate(560deg)}
+  100%{transform:translate(0,0) rotate(720deg)}
+}
+@media (max-width:760px){.meet-mascot__ball{right:18%}}
+
+/* ---- "Woof!" bubble that pops on click ---- */
+.meet-mascot__woof{position:absolute;top:6%;right:0;z-index:3;pointer-events:none;
+  font-family:var(--font-display);font-weight:700;font-size:clamp(1rem,2vw,1.4rem);color:#1a0509;
+  background:var(--grad-brand);padding:8px 16px;border-radius:14px 14px 14px 4px;
+  box-shadow:0 8px 20px rgba(255,61,88,.45);
+  opacity:0;transform:scale(.4) translateY(10px)}
+.meet-mascot__figure.is-kicking .meet-mascot__woof{animation:woofPop 1s var(--ease-out)}
+@keyframes woofPop{
+  0%{opacity:0;transform:scale(.4) translateY(10px)}
+  18%{opacity:1;transform:scale(1.08) translateY(0)}
+  30%{transform:scale(1)}
+  78%{opacity:1}
+  100%{opacity:0;transform:scale(.9) translateY(-6px)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .meet-mascot__figure.is-kicking img,
+  .meet-mascot__figure.is-kicking .meet-mascot__ball{animation:none}
+  /* still show the Woof! bubble (a fade), just no big motion */
+  .meet-mascot__figure.is-kicking .meet-mascot__woof{animation:woofFade 1s var(--ease-out)}
+}
+@keyframes woofFade{0%{opacity:0}20%,78%{opacity:1}100%{opacity:0}}
+
+/* ---- speech bubble ---- */
+.meet-mascot__bubble{position:relative;display:inline-block;max-width:520px;
+  background:var(--surface-2);border:1px solid var(--border-glass);border-radius:18px;
+  padding:20px 24px;backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+/* tail pointing toward the mascot (left on desktop, down on mobile) */
+.meet-mascot__bubble::after{content:"";position:absolute;left:-9px;top:38px;width:18px;height:18px;
+  background:var(--surface-2);border-left:1px solid var(--border-glass);border-bottom:1px solid var(--border-glass);
+  transform:rotate(45deg)}
+@media (max-width:760px){
+  .meet-mascot__bubble{margin:0 auto}
+  .meet-mascot__bubble::after{left:50%;top:-9px;transform:translateX(-50%) rotate(135deg)}
+}
+.meet-mascot__say{font-family:var(--font-display);font-size:clamp(1.15rem,2.6vw,1.6rem);line-height:1.35;
+  color:#fff;min-height:1.4em;margin:0}
+.meet-mascot__say #mascotType{background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meet-mascot__caret{color:var(--crimson);font-weight:400;animation:mascotBlink 1s steps(1) infinite}
+@keyframes mascotBlink{50%{opacity:0}}
+
+.meet-mascot__bio{color:var(--text-muted);font-size:clamp(1rem,1.8vw,1.12rem);line-height:1.7;
+  max-width:48ch;margin:18px 0 0}
+@media (max-width:760px){.meet-mascot__bio{margin-inline:auto}}
+
+@media (prefers-reduced-motion:reduce){
+  .meet-mascot__figure img{animation:none}
+  .meet-mascot__caret{animation:none}
+}

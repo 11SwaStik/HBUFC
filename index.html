@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="css/mascot.css" />
   <link rel="stylesheet" href="css/chemistry.css" />
   <link rel="stylesheet" href="css/origins.css" />
+  <link rel="stylesheet" href="css/playzone.css" />
 
   <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -83,6 +84,7 @@
         <li><a href="#values" class="nav__link">Values</a></li>
         <li><a href="#formation" class="nav__link">Formation</a></li>
         <li><a href="#brotherhood" class="nav__link">Brotherhood</a></li>
+        <li><a href="#mascot" class="nav__link">Mascot</a></li>
         <li><a href="#join" class="nav__link nav__link--cta">Join</a></li>
       </ul>
     </nav>
@@ -91,19 +93,52 @@
   <main>
     <!-- ===== 1. HERO ===== -->
     <section class="hero" id="home">
-      <!-- logo temporarily removed from hero (per implementation fix) -->
-      <!-- supporting mascot — tucked in the corner -->
-      <div class="mascot mascot--hero" data-parallax="0.06" aria-hidden="true">
-        <img src="assets/mascoty.png" alt="" />
+      <!-- minimal footballer-beside-ball silhouette — faint background element -->
+      <div class="hero__figure" data-parallax="0.05" aria-hidden="true">
+        <svg viewBox="0 0 400 640" fill="none" stroke="currentColor" stroke-width="3"
+             stroke-linecap="round" stroke-linejoin="round">
+          <g class="fig-player">
+            <!-- head -->
+            <circle cx="200" cy="70" r="34"/>
+            <!-- neck -->
+            <path d="M200 104 V124"/>
+            <!-- shoulders -->
+            <path d="M132 150 Q200 128 268 150"/>
+            <!-- spine / torso -->
+            <path d="M200 124 V312"/>
+            <!-- left arm -->
+            <path d="M132 150 C112 196 108 250 116 318"/>
+            <!-- right arm -->
+            <path d="M268 150 C288 196 292 250 284 318"/>
+            <!-- hips -->
+            <path d="M150 312 Q200 300 250 312"/>
+            <!-- left leg -->
+            <path d="M168 312 C150 410 146 520 150 596"/>
+            <!-- right leg -->
+            <path d="M232 312 C250 410 254 520 250 596"/>
+            <!-- feet -->
+            <path d="M150 596 H120"/>
+            <path d="M250 596 H280"/>
+          </g>
+          <!-- ball beside the right foot (outer g positions, inner g spins) -->
+          <g transform="translate(322 568)">
+            <g class="fig-ball">
+              <circle r="42"/>
+              <polygon points="0,-16 15,-5 9,13 -9,13 -15,-5"/>
+              <path d="M0 -16 V-32 M15 -5 L29 -14 M9 13 L18 28 M-9 13 L-18 28 M-15 -5 L-29 -14"/>
+            </g>
+          </g>
+        </svg>
       </div>
+
       <div class="hero__particles" id="particles" aria-hidden="true"></div>
       <div class="hero__inner container">
         <p class="hero__eyebrow">A Football Movement • Since 2017</p>
         <h1 class="hero__title">Football for All</h1>
 
         <p class="hero__purpose">
-          Born on the pitches of Ajmer to open the game to everyone —
-          <span class="hero__purpose-em">no favouritism, no closed circles, just football.</span>
+          Born in Ajmer. Built by Brotherhood.
+          <span class="hero__purpose-em">No connections needed. Just football.</span>
         </p>
 
         <div class="hero__actions">
@@ -271,11 +306,6 @@
 
     <!-- ===== 4b. MEET THE BROTHERHOOD (horizontal carousel) ===== -->
     <section class="section section--brotherhood" id="brotherhood">
-      <!-- supporting mascot with quote — decorative, secondary to content -->
-      <div class="mascot mascot--brotherhood" data-parallax="0.08" aria-hidden="true">
-        <img src="assets/mascoty.png" alt="" />
-        <span class="mascot__quote">“Every player has a story.”</span>
-      </div>
       <div class="container">
         <header class="section-head reveal">
           <span class="section-head__eyebrow">The Family</span>
@@ -308,6 +338,38 @@
           <p class="section-head__lead">Numbers only tell part of it — but it's a part worth telling.</p>
         </header>
         <div class="impact-grid" id="impactGrid"><!-- JS: Impact --></div>
+      </div>
+    </section>
+
+    <!-- ===== 6. MEET OUR MASCOT ===== -->
+    <section class="section section--mascot" id="mascot">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-head__eyebrow">The Twelfth Man</span>
+          <h2 class="section-head__title">Meet Our Mascot</h2>
+        </header>
+
+        <div class="meet-mascot reveal" id="meetMascot">
+          <button class="meet-mascot__figure" id="mascotFigure" type="button"
+                  aria-label="Tap Soldier — he kicks the ball">
+            <span class="meet-mascot__halo" aria-hidden="true"></span>
+            <span class="meet-mascot__woof" id="mascotWoof" aria-hidden="true">Woof!</span>
+            <img src="assets/mascot-brand.png" alt="Soldier, the official mascot of HBUFC" />
+            <span class="meet-mascot__ball" id="mascotBall" aria-hidden="true">
+              <svg viewBox="0 0 40 40" width="100%" height="100%">
+                <circle cx="20" cy="20" r="18" fill="#f6f8fc" stroke="#0a0c14" stroke-width="2"/>
+                <path fill="#0a0c14" d="M20 9l5.3 3.8-2 6.2h-6.6L14.7 12.8 20 9zM9.3 16l4.4.3 2 6-3.5 3-4-2.7 1.1-6.6zm21.4 0l1.1 6.6-4 2.7-3.5-3 2-6 4.4-.3zM15 29.3l-1.7-4.2 3.5-3h6.4l3.5 3-1.7 4.2H15z"/>
+              </svg>
+            </span>
+          </button>
+
+          <div class="meet-mascot__intro">
+            <div class="meet-mascot__bubble">
+              <p class="meet-mascot__say"><span id="mascotType"></span><span class="meet-mascot__caret" aria-hidden="true">|</span></p>
+            </div>
+            <p class="meet-mascot__bio">Soldier roams the touchline every matchday — loud, loyal, and never missing a game. He's the heartbeat of the stands and the spirit of the brotherhood: proof that at HBUFC, everyone belongs on the pitch.</p>
+          </div>
+        </div>
       </div>
     </section>
 

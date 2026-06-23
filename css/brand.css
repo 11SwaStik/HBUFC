@@ -96,6 +96,33 @@ body.is-loading{overflow:hidden}
 .brand:hover .brand__name b{color:var(--gold)}
 
 /* ====================================================================
+   HERO — minimal footballer-beside-ball silhouette (background element)
+   Monochrome thin-line vector, low opacity, subtle cinematic motion.
+   ==================================================================== */
+.hero__figure{position:absolute;z-index:0;right:clamp(-40px,3vw,80px);bottom:0;
+  height:min(86%,640px);pointer-events:none;
+  color:var(--text);opacity:.06}
+.hero__figure svg{height:100%;width:auto;display:block;overflow:visible}
+
+/* player: very subtle "breathing" — barely-there vertical + scale drift */
+.fig-player{transform-box:fill-box;transform-origin:50% 30%;
+  animation:figBreathe 6s var(--ease-inout) infinite}
+@keyframes figBreathe{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-5px) scale(1.012)}
+}
+/* ball: slow elegant rotation */
+.fig-ball{transform-box:fill-box;transform-origin:center;
+  animation:figRoll 6s linear infinite}
+@keyframes figRoll{to{transform:rotate(360deg)}}
+
+@media (max-width:760px){.hero__figure{opacity:.045;right:-30px;height:70%}}
+@media (max-width:480px){.hero__figure{opacity:.04;height:58%}}
+@media (prefers-reduced-motion:reduce){
+  .fig-player,.fig-ball{animation:none}
+}
+
+/* ====================================================================
    FOOTER — dedicated brand block
    ==================================================================== */
 .footer__brand-block{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;

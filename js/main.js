@@ -125,6 +125,43 @@ function spawnParticles(n = 28) {
   }).join("");
 }
 
+/* Meet Our Mascot: Soldier introduces himself (types in on scroll) and, when
+   clicked, kicks the ball + shows a "Woof!" bubble (visual easter egg, no sound). */
+function setupMascotIntro() {
+  const el = $("#mascotType");
+  const full = "Hi, I'm Soldier — the mascot of HBUFC.";
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+  // typed intro
+  if (el) {
+    if (reduce) { el.textContent = full; }
+    else {
+      let typed = false;
+      const type = () => {
+        if (typed) return; typed = true;
+        let i = 0;
+        const step = () => { el.textContent = full.slice(0, i); if (i++ <= full.length) setTimeout(step, 42); };
+        step();
+      };
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { type(); io.disconnect(); } });
+      }, { threshold: 0.5 });
+      io.observe(el.closest(".meet-mascot") || el);
+    }
+  }
+
+  // click easter egg: kick + "Woof!" bubble (visual only)
+  const fig = $("#mascotFigure");
+  if (fig) {
+    let busy = false;
+    fig.addEventListener("click", () => {
+      if (busy) return; busy = true;
+      fig.classList.add("is-kicking");      // kick + "Woof!" bubble (visual only)
+      setTimeout(() => { fig.classList.remove("is-kicking"); busy = false; }, 1000);
+    });
+  }
+}
+
 /* nav: mobile toggle + active glow + shrink */
 function setupNav() {
   const toggle = $("#navToggle"), links = $("#navLinks"), header = $("#header");
@@ -190,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   spawnParticles();
   setupNav();
   mouseLight();
+  setupMascotIntro();
 
   initMotion();          // GSAP/Lenis/SplitType (or graceful fallback)
 
