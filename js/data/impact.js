@@ -1,7 +1,7 @@
 /* Impact stats — presented beautifully, not as a dashboard. */
 export const impact = [
-  { value: 340, suffix: "+", label: "Players developed", sub: "From overlooked to unstoppable" },
-  { value: 9,   suffix: "",  label: "Years active", sub: "Since 2017, without missing a beat" },
-  { value: 1200,suffix: "+", label: "Community members", sub: "Families, fans, volunteers" },
-  { value: 78,  suffix: "",  label: "Tournaments played", sub: "District, state and beyond" },
+  { value: 50,  suffix: "+", label: "Players Developed",    sub: "Helping local footballers learn, grow and compete" },
+  { value: 9,   suffix: "",  label: "Years Active",         sub: "Since 2017, building football culture in Ajmer" },
+  { value: 500, suffix: "+", label: "Community Members",    sub: "Players, families, supporters and volunteers" },
+  { value: 10,  suffix: "+", label: "Tournaments Played",   sub: "District and local competitions" },
 ];
