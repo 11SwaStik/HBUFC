@@ -3,55 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#05060a" />
-  <title>H.B.U FC — Football Club · Ajmer</title>
-  <meta name="description" content="Official home of H.B.U FC — Est. 2017, Ajmer, Rajasthan. Fixtures, squad, stats and more." />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="H.B.U FC" />
-  <meta property="og:description" content="Passion. Pride. Ajmer. The official home of H.B.U FC." />
+  <meta name="theme-color" content="#04050a" />
+  <title>HBUFC — Football for All</title>
+  <meta name="description" content="HBUFC — a football movement born in Ajmer, 2017. Football for All. No connections needed, just football." />
+  <meta property="og:title" content="HBUFC — Football for All" />
+  <meta property="og:description" content="A grassroots football movement from Ajmer. Talent over favouritism." />
   <meta property="og:type" content="website" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/experience.css" />
+
+  <!-- Motion stack (CDN, client-side — fully GitHub Pages compatible). defer = run after parse. -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
 </head>
 <body>
-
-  <!-- ===== Global FX layers ===== -->
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <!-- ===== Global FX ===== -->
   <div class="mouse-glow" id="mouseGlow" aria-hidden="true"></div>
   <div class="bg-fx" aria-hidden="true">
     <div class="bg-aurora"></div>
     <div class="bg-grid"></div>
-    <span class="orb orb--1"></span>
-    <span class="orb orb--2"></span>
-    <span class="orb orb--3"></span>
+    <span class="orb orb--1"></span><span class="orb orb--2"></span><span class="orb orb--3"></span>
   </div>
 
   <!-- ===== Header ===== -->
   <header class="header" id="header">
     <nav class="nav container">
-      <a href="#home" class="brand" aria-label="H.B.U FC home">
-        <span class="crest" aria-hidden="true">
-          <svg viewBox="0 0 64 64" width="40" height="40" role="img" aria-label="H.B.U FC crest">
-            <defs>
-              <linearGradient id="crestGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#ff3d58" />
-                <stop offset="1" stop-color="#ffd76a" />
-              </linearGradient>
-            </defs>
-            <path d="M32 2 L58 12 V32 C58 48 46 58 32 62 C18 58 6 48 6 32 V12 Z"
-                  fill="none" stroke="url(#crestGrad)" stroke-width="2.5" />
-            <text x="32" y="40" text-anchor="middle" font-family="Space Grotesk, sans-serif"
-                  font-size="18" font-weight="700" fill="url(#crestGrad)">HBU</text>
+      <a href="#home" class="brand" aria-label="HBUFC home">
+        <span class="brand__crest" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="38" height="38">
+            <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3d58"/><stop offset="1" stop-color="#ffd76a"/></linearGradient></defs>
+            <path d="M24 2 L44 9 V25 C44 37 35 44 24 47 C13 44 4 37 4 25 V9 Z" fill="none" stroke="url(#cg)" stroke-width="2.2"/>
+            <text x="24" y="30" text-anchor="middle" font-family="Space Grotesk" font-size="13" font-weight="700" fill="url(#cg)">HBU</text>
           </svg>
         </span>
-        <span class="brand__name">H.B.U <span class="brand__fc">FC</span></span>
+        <span class="brand__name">HBU<b>FC</b></span>
       </a>
 
       <button class="nav__toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -59,11 +49,8 @@
       </button>
 
       <ul class="nav__links" id="navLinks">
-        <li><a href="#match" class="nav__link"><span class="live-dot"></span>Match</a></li>
-        <li><a href="#tactics" class="nav__link">Tactics</a></li>
-        <li><a href="#players" class="nav__link">Players</a></li>
-        <li><a href="#dashboard" class="nav__link">Stats</a></li>
-        <li><a href="#trophies" class="nav__link">Trophies</a></li>
+        <li><a href="#home" class="nav__link">Home</a></li>
+        <li><a href="#squad" class="nav__link">Squad</a></li>
         <li><a href="#join" class="nav__link nav__link--cta">Join</a></li>
       </ul>
     </nav>
@@ -72,303 +59,102 @@
   <main>
     <!-- ===== HERO ===== -->
     <section class="hero" id="home">
-      <!-- animated football-themed background -->
-      <div class="hero__pitch" aria-hidden="true">
-        <span class="pitch-line pitch-line--mid"></span>
-        <span class="pitch-circle"></span>
-        <span class="pitch-arc pitch-arc--top"></span>
-        <span class="pitch-arc pitch-arc--bottom"></span>
-      </div>
       <div class="hero__particles" id="particles" aria-hidden="true"></div>
-
       <div class="hero__inner container">
-        <div class="hero__crest" id="heroCrest" aria-hidden="true">
-          <svg viewBox="0 0 200 200" width="150" height="150">
-            <defs>
-              <linearGradient id="heroCrestGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#ff3d58" />
-                <stop offset=".5" stop-color="#ff6b3d" />
-                <stop offset="1" stop-color="#ffd76a" />
-              </linearGradient>
-            </defs>
-            <circle cx="100" cy="100" r="78" fill="none" stroke="url(#heroCrestGrad)" stroke-width="2" opacity=".5" class="crest-ring" />
-            <path d="M100 14 L170 40 V104 C170 150 138 178 100 188 C62 178 30 150 30 104 V40 Z"
-                  fill="rgba(255,61,88,.06)" stroke="url(#heroCrestGrad)" stroke-width="3" />
-            <text x="100" y="118" text-anchor="middle" font-family="Space Grotesk, sans-serif"
-                  font-size="46" font-weight="700" fill="url(#heroCrestGrad)">HBU</text>
-            <text x="100" y="150" text-anchor="middle" font-family="Inter, sans-serif"
-                  font-size="13" letter-spacing="4" fill="#ffd76a">EST. 2017</text>
+        <div class="hero__crest" aria-hidden="true">
+          <svg viewBox="0 0 200 200" width="140" height="140">
+            <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3d58"/><stop offset=".5" stop-color="#ff6b3d"/><stop offset="1" stop-color="#ffd76a"/></linearGradient></defs>
+            <circle cx="100" cy="100" r="78" fill="none" stroke="url(#hg)" stroke-width="2" opacity=".5" class="crest-ring"/>
+            <path d="M100 14 L170 40 V104 C170 150 138 178 100 188 C62 178 30 150 30 104 V40 Z" fill="rgba(255,61,88,.06)" stroke="url(#hg)" stroke-width="3"/>
+            <text x="100" y="112" text-anchor="middle" font-family="Space Grotesk" font-size="42" font-weight="700" fill="url(#hg)">HBU</text>
+            <text x="100" y="144" text-anchor="middle" font-family="Inter" font-size="12" letter-spacing="4" fill="#ffd76a">EST. 2017 · AJMER</text>
           </svg>
         </div>
 
-        <p class="hero__eyebrow reveal">Est. 2017 · Ajmer, Rajasthan · India</p>
+        <p class="hero__eyebrow">A football movement · Since 2017</p>
+        <h1 class="hero__title">Football for All</h1>
+        <p class="hero__slogan"><span id="typed"></span><span class="caret" aria-hidden="true">|</span></p>
 
-        <h1 class="hero__title" aria-label="H.B.U FC">
-          <span class="hero__word" style="--d:.1s">H.B.U</span>
-          <span class="hero__word hero__word--accent" style="--d:.28s">FC</span>
-        </h1>
-
-        <p class="hero__slogan">
-          <span id="typed"></span><span class="caret" aria-hidden="true">|</span>
-        </p>
-
-        <div class="hero__actions reveal" style="--d:.6s">
-          <a href="#join" class="btn btn--primary">
-            <span>Join the Club</span>
+        <div class="hero__actions">
+          <a href="#squad" class="btn btn--primary">
+            <span>Meet the Squad</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#results" class="btn btn--ghost">Latest Results</a>
+          <a href="#join" class="btn btn--ghost">Join the Movement</a>
         </div>
       </div>
 
-      <a href="#stats" class="scroll-cue" aria-label="Scroll down">
-        <span class="scroll-cue__text">Scroll</span>
+      <a href="#squad" class="scroll-cue" aria-label="Scroll down">
+        <span>Scroll</span>
         <span class="scroll-cue__mouse"><span></span></span>
       </a>
     </section>
 
-    <!-- ===== MATCH CENTER + LIVE SIMULATION ===== -->
-    <section class="section section--match" id="match">
-      <div class="container">
-        <header class="section-head reveal">
-          <span class="section-head__eyebrow"><span class="live-dot"></span>Match Center</span>
-          <h2 class="section-head__title">Live Match Simulation</h2>
-          <p class="section-head__lead">Relive the semi-final minute by minute — broadcast-style.</p>
-        </header>
-
-        <div class="matchcenter reveal" id="matchCenter">
-          <div class="matchcenter__inner">
-            <div class="mc-top">
-              <span class="mc-comp">
-                <svg class="ucl-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
-                State Cup · Semi-Final
-              </span>
-              <span class="mc-status" id="mcStatus"></span>
-            </div>
-
-            <div class="mc-scoreboard">
-              <div class="mc-team mc-team--home">
-                <div class="mc-team__badge">HBU</div>
-                <div class="mc-team__name">H.B.U FC</div>
-                <div class="mc-team__form"><i class="W"></i><i class="W"></i><i class="D"></i><i class="W"></i><i class="L"></i></div>
-              </div>
-              <div class="mc-center">
-                <div class="mc-score"><b id="mcScoreH">0</b><span class="mc-score__sep">:</span><b id="mcScoreA">0</b></div>
-                <div class="mc-clock" id="mcClock">0'</div>
-              </div>
-              <div class="mc-team mc-team--away">
-                <div class="mc-team__badge">AJU</div>
-                <div class="mc-team__name">Ajmer United</div>
-                <div class="mc-team__form"><i class="L"></i><i class="W"></i><i class="D"></i><i class="L"></i><i class="D"></i></div>
-              </div>
-            </div>
-
-            <div class="mc-momentum">
-              <div class="mc-momentum__label"><span>H.B.U FC</span><span>Momentum</span><span>Ajmer United</span></div>
-              <div class="mc-momentum__track">
-                <span class="mc-momentum__home" id="mcMomH"></span>
-                <span class="mc-momentum__away" id="mcMomA"></span>
-              </div>
-            </div>
-
-            <div class="mc-stats">
-              <div class="mc-stat"><b id="mcPossH">50%</b><span>Possession</span></div>
-              <div class="mc-stat"><b id="mcShots">0</b><span>Shots</span></div>
-              <div class="mc-stat"><b id="mcXg">0.0</b><span>xG</span></div>
-            </div>
-
-            <div class="mc-feed">
-              <div class="mc-feed__head">
-                <span class="mc-feed__title">Live Feed</span>
-              </div>
-              <div class="mc-feed__list" id="mcFeed"></div>
-            </div>
-
-            <div class="mc-controls">
-              <button class="mc-btn mc-btn--play" id="mcPlay">Simulate Match</button>
-              <button class="mc-btn" id="mcReset">Reset</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== TACTICS: 4-3-3 PITCH + FUT CARD ===== -->
-    <section class="section section--tactics" id="tactics">
-      <div class="container">
-        <header class="section-head reveal">
-          <span class="section-head__eyebrow">Tactics Board</span>
-          <h2 class="section-head__title">Formation &amp; Squad</h2>
-          <p class="section-head__lead">Switch the shape, tap a player, study the card.</p>
-        </header>
-
-        <div class="formation-switch reveal">
-          <button class="formation-switch__btn is-active" data-formation="4-3-3">4-3-3</button>
-          <button class="formation-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
-          <button class="formation-switch__btn" data-formation="3-5-2">3-5-2</button>
-        </div>
-
-        <div class="tactics reveal">
-          <div class="pitch" id="pitch">
-            <div class="pitch__glow"></div>
-            <div class="pitch__lines">
-              <span class="pl-outer"></span>
-              <span class="pl-mid"></span>
-              <span class="pl-circle"></span>
-              <span class="pl-spot"></span>
-              <span class="pl-box-top"></span>
-              <span class="pl-box-bot"></span>
-              <span class="pl-six-top"></span>
-              <span class="pl-six-bot"></span>
-            </div>
-            <!-- players injected by JS -->
-          </div>
-
-          <div class="fut-panel">
-            <div class="fut-card" id="futCard"><!-- JS --></div>
-            <p class="fut-panel__hint">Tap any player on the pitch to load their card</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 1. STATISTICS ===== -->
-    <section class="section section--stats" id="stats">
-      <div class="container">
-        <header class="section-head reveal">
-          <span class="section-head__eyebrow">By the numbers</span>
-          <h2 class="section-head__title">Club Statistics</h2>
-          <p class="section-head__lead">Nine seasons of grit on the pitches of Ajmer — and counting.</p>
-        </header>
-        <div class="stats-grid" id="statsGrid"><!-- JS --></div>
-      </div>
-    </section>
-
-    <!-- ===== ANIMATED STATS DASHBOARD ===== -->
-    <section class="section section--dashboard" id="dashboard">
-      <div class="container">
-        <header class="section-head reveal">
-          <span class="section-head__eyebrow">Season Analytics</span>
-          <h2 class="section-head__title">Statistics Dashboard</h2>
-          <p class="section-head__lead">The numbers behind the run, visualised.</p>
-        </header>
-
-        <div class="dashboard reveal" id="dashboard-grid">
-          <div class="dash-card">
-            <div class="dash-card__title">Win / Draw / Loss</div>
-            <div class="donut">
-              <div class="donut-wrap">
-                <svg class="donut__svg" id="donutSvg" viewBox="0 0 130 130"></svg>
-                <div class="donut-wrap__num" id="donutNum">0%</div>
-              </div>
-              <div class="donut__legend">
-                <div><i style="background:var(--win)"></i><span>Won</span> <b>161</b></div>
-                <div><i style="background:var(--gold-500)"></i><span>Drawn</span> <b>52</b></div>
-                <div><i style="background:var(--crimson-500)"></i><span>Lost</span> <b>35</b></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="dash-card">
-            <div class="dash-card__title">Goals by Month</div>
-            <div class="bars" id="bars"></div>
-          </div>
-
-          <div class="dash-card">
-            <div class="dash-card__title">Team Profile</div>
-            <div class="radar"><svg class="radar__svg" id="radarSvg" viewBox="0 0 230 230"></svg></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 2. FEATURED PLAYERS ===== -->
-    <section class="section section--players" id="players">
+    <!-- ===== SQUAD SHOWCASE (cards + 4-3-3 pitch + chemistry) ===== -->
+    <section class="section" id="squad">
       <div class="container">
         <header class="section-head reveal">
           <span class="section-head__eyebrow">The Squad</span>
-          <h2 class="section-head__title">Featured Players</h2>
-          <p class="section-head__lead">The faces driving H.B.U FC forward this campaign.</p>
+          <h2 class="section-head__title">Collectible Squad</h2>
+          <p class="section-head__lead">Every player a card. Tap the pitch to explore the 4-3-3 and the chemistry that binds it.</p>
         </header>
-        <div class="players-grid" id="playersGrid"><!-- JS --></div>
+
+        <div class="squad-layout">
+          <!-- FUT card grid -->
+          <div class="squad-grid reveal" id="squadGrid"><!-- JS: PlayerCard --></div>
+
+          <!-- Interactive pitch -->
+          <aside class="pitch-panel reveal">
+            <div class="form-switch">
+              <button class="form-switch__btn is-active" data-formation="4-3-3">4-3-3</button>
+              <button class="form-switch__btn" data-formation="4-2-3-1">4-2-3-1</button>
+              <button class="form-switch__btn" data-formation="3-5-2">3-5-2</button>
+            </div>
+
+            <div class="pitch" id="pitch">
+              <div class="pitch__glow"></div>
+              <div class="pitch__lines">
+                <span class="pl-outer"></span><span class="pl-mid"></span><span class="pl-circle"></span><span class="pl-spot"></span>
+                <span class="pl-box-top"></span><span class="pl-box-bot"></span><span class="pl-six-top"></span><span class="pl-six-bot"></span>
+              </div>
+              <!-- players + chemistry links injected by JS -->
+            </div>
+
+            <div class="chem">
+              <span class="chem__label">Team Chemistry</span>
+              <span class="chem__val" id="chemScore">0</span>
+            </div>
+            <p class="chem__hint">Hover a player on the pitch to trace their links</p>
+          </aside>
+        </div>
       </div>
     </section>
 
-    <!-- ===== 3. RECENT RESULTS ===== -->
-    <section class="section section--results" id="results">
+    <!-- ===== JOIN (CTA stub for the slice) ===== -->
+    <section class="section" id="join">
       <div class="container">
         <header class="section-head reveal">
-          <span class="section-head__eyebrow">Matchday</span>
-          <h2 class="section-head__title">Recent Results</h2>
-          <p class="section-head__lead">Form guide and the latest scores from the touchline.</p>
+          <span class="section-head__eyebrow">Be part of it</span>
+          <h2 class="section-head__title">No connections needed.<br/>Just football.</h2>
+          <p class="section-head__lead">Trials are open to every footballer in and around Ajmer. Bring your boots.</p>
         </header>
-        <div class="form-guide reveal" id="formGuide"><!-- JS --></div>
-        <div class="results-list" id="resultsList"><!-- JS --></div>
-      </div>
-    </section>
-
-    <!-- ===== 4. TROPHY CABINET ===== -->
-    <section class="section section--trophies" id="trophies">
-      <div class="container">
-        <header class="section-head reveal">
-          <span class="section-head__eyebrow">Honours</span>
-          <h2 class="section-head__title">Trophy Cabinet</h2>
-          <p class="section-head__lead">Silverware earned across the district and the state.</p>
-        </header>
-        <div class="trophies-grid" id="trophiesGrid"><!-- JS --></div>
-      </div>
-    </section>
-
-    <!-- ===== 5. CLUB TIMELINE ===== -->
-    <section class="section section--timeline" id="timeline">
-      <div class="container">
-        <header class="section-head reveal">
-          <span class="section-head__eyebrow">Our Story</span>
-          <h2 class="section-head__title">Club Timeline</h2>
-          <p class="section-head__lead">From a local kickabout to a club with a crest.</p>
-        </header>
-        <ol class="timeline" id="timelineList"><!-- JS --></ol>
-      </div>
-    </section>
-
-    <!-- ===== 6. CALL TO ACTION ===== -->
-    <section class="section section--cta" id="join">
-      <div class="container">
-        <div class="cta-card reveal">
-          <div class="cta-card__glow" aria-hidden="true"></div>
-          <span class="cta-card__eyebrow">Be part of it</span>
-          <h2 class="cta-card__title">Wear the crest.<br/>Write the next chapter.</h2>
-          <p class="cta-card__lead">Trials, memberships, and sponsorships are open for the 2026 season. Bring your boots — we'll bring the floodlights.</p>
-          <div class="cta-card__actions">
-            <a href="#" class="btn btn--primary"><span>Request a Trial</span></a>
-            <a href="#" class="btn btn--ghost">Become a Sponsor</a>
-          </div>
+        <div style="text-align:center">
+          <a href="#" class="btn btn--primary"><span>Request a Trial</span></a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ===== Footer ===== -->
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <span class="brand__name">H.B.U <span class="brand__fc">FC</span></span>
-        <p>Est. 2017 · Ajmer, Rajasthan, India</p>
+        <span class="brand__name">HBU<b>FC</b></span>
+        <p>Football for All · Est. 2017 · Ajmer, Rajasthan, India</p>
       </div>
-      <nav class="footer__links" aria-label="Footer">
-        <a href="#stats">Stats</a>
-        <a href="#players">Players</a>
-        <a href="#results">Results</a>
-        <a href="#trophies">Trophies</a>
-        <a href="#join">Join</a>
-      </nav>
-      <p class="footer__legal">&copy; <span id="year"></span> H.B.U FC. All rights reserved.</p>
+      <p class="footer__legal">&copy; <span id="year"></span> HBUFC. Football for All.</p>
     </div>
   </footer>
 
-  <button class="to-top" id="toTop" aria-label="Back to top">↑</button>
-
   <script src="js/main.js" type="module"></script>
-  <script src="js/experience.js" type="module"></script>
 </body>
 </html>
