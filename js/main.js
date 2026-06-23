@@ -52,7 +52,7 @@ function renderFormation() {
   });
 
   updateChem("4-3-3");
-  api.select(9); // default highlight to seed the chemistry view
+  // no default selection — chemistry lines stay hidden until the user interacts
 }
 
 function updateChem(key) {

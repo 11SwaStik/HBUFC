@@ -33,73 +33,86 @@
 .pitch{transition:filter .5s var(--ease-out)}
 .pitch.chem-mode{filter:saturate(.92)}
 .pitch.chem-mode .pitch__glow{opacity:.4}
-/* darkening veil sits above the turf but below links + tokens */
 .pitch.chem-mode::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(120% 90% at 50% 45%,rgba(4,5,10,.35),rgba(4,5,10,.62));
   animation:chemVeilIn .5s var(--ease-out)}
 @keyframes chemVeilIn{from{opacity:0}to{opacity:1}}
 
-/* links layer needs to sit above the veil in chem mode */
+/* ---------- z-index hierarchy: Tooltip > Marker > Name ----------
+   links(2) < players(3) < ball/trail(4) < selected player(5) < tooltip(7) */
 .pitch__links{z-index:2}
-.pitch__player{z-index:3}      /* already set elsewhere; ensured above links */
-.pitch__tip{z-index:6}
+.pitch__trail{position:absolute;inset:0;z-index:3;pointer-events:none}
+.pitch__ball{z-index:4}
+.pitch__player{z-index:3}
+.pitch__player.is-selected{z-index:5}
+.pitch__tip{z-index:7}
 
-/* ---------- chemistry links ---------- */
-/* base + glow are hidden until chem mode (outside chem mode the old subtle
-   per-selection highlight still works via .is-active) */
-.chem-link__base{stroke:rgba(255,255,255,.10);stroke-width:.5;opacity:0;transition:opacity .4s}
-.chem-link__glow{stroke:var(--neon-cyan);stroke-width:.6;opacity:0;stroke-linecap:round;
-  filter:drop-shadow(0 0 1.4px var(--neon-cyan));transition:opacity .4s}
-.chem-link__flow{stroke:#eaffff;stroke-width:1.1;opacity:0;stroke-linecap:round;
-  /* a short lit dash that travels the line: dash = 8 units lit, rest = full length gap */
+/* ---------- chemistry links: HIDDEN by default, shown only for active player ----------
+   Thin cyan connection lines. No network is ever shown all at once. */
+.chem-link{opacity:0;transition:opacity .3s var(--ease-out)}
+.chem-link__line{stroke:var(--neon-cyan);stroke-width:.5;stroke-linecap:round;opacity:.5}
+.chem-link__flow{stroke:#eaffff;stroke-width:1;stroke-linecap:round;opacity:.9;
   stroke-dasharray:6 var(--len);stroke-dashoffset:var(--len);
-  filter:drop-shadow(0 0 2px var(--neon-cyan))}
-
-/* when chem mode is on, reveal all links + run the traveling light */
-.pitch.chem-mode .chem-link__base{opacity:1}
-.pitch.chem-mode .chem-link__glow{opacity:.55}
-.pitch.chem-mode .chem-link__flow{opacity:.95;
-  animation:chemFlow 2.4s linear infinite}
+  filter:drop-shadow(0 0 1.6px var(--neon-cyan))}
+/* only the active player's links appear */
+.chem-link.is-active{opacity:1}
+.chem-link.is-active .chem-link__flow{animation:chemFlow 2.4s linear infinite}
 @keyframes chemFlow{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:calc(var(--len) * -1 - 6)}}
 
-/* hover isolation: dim all links, spotlight only the hovered player's */
-.pitch.chem-mode.chem-hover .chem-link{opacity:.12;transition:opacity .25s}
-.pitch.chem-mode.chem-hover .chem-link.is-active{opacity:1}
-.pitch.chem-mode.chem-hover .chem-link.is-active .chem-link__glow{stroke:var(--gold);
-  filter:drop-shadow(0 0 2.5px var(--gold));opacity:.9}
-.pitch.chem-mode.chem-hover .chem-link.is-active .chem-link__flow{stroke:#fff8e6;
-  filter:drop-shadow(0 0 3px var(--gold))}
-
-/* players dim/lift on hover-isolation */
+/* connected teammates highlight; unrelated players dim (chem mode only) */
 .pitch.chem-mode .pitch__player{transition:opacity .25s,filter .25s,transform var(--dur)}
-.pitch.chem-mode .pitch__player.is-dim{opacity:.3;filter:saturate(.5)}
-.pitch.chem-mode .pitch__player.is-near .pp-dot{box-shadow:0 0 0 3px var(--gold),0 0 18px var(--gold)}
+.pitch.chem-mode .pitch__player.is-dim{opacity:.32;filter:saturate(.5)}
+.pitch .pitch__player.is-linked .pp-dot{box-shadow:0 0 0 3px var(--gold),0 0 16px var(--gold)}
 
-/* outside chem mode: keep the legacy single-link highlight on selection */
-.chem-link.is-active .chem-link__glow{opacity:.7}
-.chem-link.is-active .chem-link__base{opacity:.5}
+/* ====================================================================
+   PASSING MODE — isolate everything else; show only the ball + trail
+   ==================================================================== */
+.pitch.pass-mode .pitch__links{opacity:0!important}              /* no chemistry lines */
+.pitch.pass-mode .pitch__tip{opacity:0!important}                /* no tooltips */
+.pitch.pass-mode .pitch__player.is-selected .pp-glow,
+.pitch.pass-mode .pitch__player .pp-glow{opacity:0!important;animation:none!important}  /* no selection glow */
+.pitch.pass-mode .pitch__player.is-dim{opacity:1;filter:none}    /* no chem dim/highlight */
+/* neutralise any selection / chem highlight on the dots while passing */
+.pitch.pass-mode .pitch__player.is-linked .pp-dot,
+.pitch.pass-mode .pitch__player.is-selected .pp-dot{
+  transform:none!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 0 3px rgba(255,255,255,.12)!important}
+.pitch.pass-mode .pitch__player.is-selected .pp-glow{animation:none!important;opacity:0!important}
 
-/* ---------- Passing Mode: ball traveling the tour path ---------- */
-.pitch__ball{position:absolute;top:0;left:0;width:clamp(16px,2.4vw,26px);height:clamp(16px,2.4vw,26px);
-  z-index:4;opacity:0;pointer-events:none;
-  offset-rotate:0deg;offset-distance:0%;
-  filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
-.pitch__ball svg{display:block;width:100%;height:100%;animation:ballSpin 1.6s linear infinite}
-.pitch.pass-on .pitch__ball{opacity:1;animation:ballTravel 9s linear infinite}
-@keyframes ballTravel{from{offset-distance:0%}to{offset-distance:100%}}
+/* the football */
+.pitch__ball{position:absolute;top:0;left:0;width:clamp(18px,2.6vw,28px);height:clamp(18px,2.6vw,28px);
+  margin:calc(clamp(18px,2.6vw,28px) / -2) 0 0 calc(clamp(18px,2.6vw,28px) / -2);  /* centre on point */
+  opacity:0;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.55));
+  transition:opacity .35s var(--ease-out)}
+.pitch.pass-mode .pitch__ball{opacity:1}
+.pitch__ball svg{display:block;width:100%;height:100%;animation:ballSpin 1.1s linear infinite}
 @keyframes ballSpin{to{transform:rotate(360deg)}}
 
-/* ---------- reduced motion: keep it calm ---------- */
+/* trail dots left behind the ball */
+.pitch__trail{opacity:0;transition:opacity .3s}
+.pitch.pass-mode .pitch__trail{opacity:1}
+.pitch__trail-dot{position:absolute;width:clamp(7px,1vw,11px);height:clamp(7px,1vw,11px);border-radius:50%;
+  margin:calc(clamp(7px,1vw,11px) / -2) 0 0 calc(clamp(7px,1vw,11px) / -2);opacity:0;
+  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(255,215,106,.4) 60%,transparent 75%);
+  transition:opacity .12s linear}
+
+/* receiver briefly glows when the ball arrives */
+.pitch__player.is-receiving .pp-dot{
+  box-shadow:0 0 0 3px var(--gold),0 0 22px var(--gold);
+  animation:receivePop .6s var(--ease-out)}
+@keyframes receivePop{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+
+/* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
-  .chem-link__flow{animation:none!important;opacity:.6!important;stroke-dashoffset:0;stroke-dasharray:none}
-  .pitch.pass-on .pitch__ball{animation:none!important}
+  .chem-link.is-active .chem-link__flow{animation:none!important;opacity:.6!important;stroke-dasharray:none}
   .pitch__ball svg{animation:none!important}
   .chem.is-on .chem__dot{animation:none!important}
+  .pitch__player.is-receiving .pp-dot{animation:none!important}
 }
 
 /* ---------- mobile ---------- */
 @media (max-width:560px){
   .chem-controls{width:100%;justify-content:center}
-  .chem-link__glow{stroke-width:.8}
+  .chem-link__line{stroke-width:.8}
   .chem-link__flow{stroke-width:1.4}
 }

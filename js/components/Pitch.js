@@ -1,7 +1,9 @@
-/* Pitch — the centerpiece. Places the squad by formation coords, draws chemistry
-   links, emits selection, and powers an interactive Chemistry / Passing mode.
-   Pure DOM + SVG + CSS (no libraries, no canvas). Animations run on CSS/compositor
-   for 60fps. */
+/* Pitch — the centerpiece. Places the squad by formation coords and powers two
+   DISTINCT features:
+     • Chemistry  — thin cyan links shown ONLY for the hovered/selected player.
+     • Passing    — a football that travels player→player along curves, leaving a
+                    short trail; receiver briefly glows. No chemistry graphics.
+   Pure DOM + SVG + CSS + one rAF loop (passing only). No libraries, no canvas. */
 import { $, $$, el } from "../lib/dom.js";
 import { formations } from "../data/formations.js";
 import { byId, roleFor } from "../data/squad.js";
@@ -15,7 +17,7 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
   let chemMode = false;
   let passMode = false;
 
-  // chemistry link layer (SVG, behind tokens). viewBox 0..100 maps to % positions.
+  // chemistry link layer (SVG). viewBox 0..100 maps to % positions.
   const linkSvg = document.createElementNS(SVGNS, "svg");
   linkSvg.setAttribute("class", "pitch__links");
   linkSvg.setAttribute("viewBox", "0 0 100 100");
@@ -23,28 +25,21 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
   linkSvg.setAttribute("aria-hidden", "true");
   root.appendChild(linkSvg);
 
-  // moving ball layer (HTML element animated via CSS offset-path, sits above links).
-  // offset-path uses px in the element's box, so we recompute on resize.
+  // passing layers: trail (behind) + ball (front)
+  const trailLayer = el("div.pitch__trail", { "aria-hidden": "true" });
+  root.appendChild(trailLayer);
   const ball = el("div.pitch__ball", { "aria-hidden": "true" });
   ball.innerHTML = `<svg viewBox="0 0 24 24" width="100%" height="100%"><use href="#hbu-ball"/></svg>`;
   defineBallSymbol(root);
   root.appendChild(ball);
 
-  // keep the passing path in sync with the responsive pitch size
-  const ro = ("ResizeObserver" in window)
-    ? new ResizeObserver(() => { if (passMode) startPassing(); })
-    : null;
-  ro?.observe(root);
-
-  // minimal tooltip for the selected player (name · position · number only)
+  // minimal tooltip for the selected player
   const tip = el("div.pitch__tip", { "aria-hidden": "true" });
   root.appendChild(tip);
 
-  function coordMap(key = current) {
-    return Object.fromEntries(formations[key].map(s => [s.id, s]));
-  }
+  const coordMap = (key = current) => Object.fromEntries(formations[key].map(s => [s.id, s]));
 
-  /* ---- unique undirected chemistry pairs present in the current formation ---- */
+  /* unique undirected chemistry pairs present in the current formation */
   function chemPairs(key = current) {
     const coord = coordMap(key);
     const seen = new Set(), pairs = [];
@@ -52,17 +47,15 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
       (byId[s.id].chem || []).forEach(cid => {
         const k = [s.id, cid].sort().join("-");
         if (seen.has(k) || !coord[cid]) return;
-        seen.add(k);
-        pairs.push([s.id, cid]);
+        seen.add(k); pairs.push([s.id, cid]);
       });
     }
     return pairs;
   }
 
+  /* ---------- render players + (hidden) links ---------- */
   function place(key) {
     current = key;
-    const coord = coordMap(key);
-
     $$(".pitch__player", root).forEach(n => n.remove());
     formations[key].forEach((s, i) => {
       const p = byId[s.id];
@@ -79,42 +72,31 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
       node.style.left = `${s.x}%`;
       node.style.top = `${s.y}%`;
       node.style.transitionDelay = `${i * 0.03}s`;
-      node.addEventListener("click", () => select(s.id));
+      node.addEventListener("click", (e) => { e.stopPropagation(); onClickPlayer(s.id); });
       node.addEventListener("mouseenter", () => onEnter(s.id));
       node.addEventListener("mouseleave", () => onLeave());
       root.appendChild(node);
     });
 
-    drawLinks();
-    if (selectedId != null) applySelection(selectedId, false);
-    if (passMode) startPassing();
+    drawLinks();                       // links exist but are hidden until activated
+    if (selectedId != null) applySelection(selectedId);
+    if (passMode) restartPassing();
   }
 
-  /* ---- link drawing ----------------------------------------------------------
-     Each pair becomes a <line> base + a glowing <line> + a traveling particle
-     <circle> that animates along the segment (CSS keyframes on the circle's
-     translate via the segment's geometry, expressed with CSS custom props). */
+  /* build the link DOM (all hidden by default; revealed per-player via .is-active) */
   function drawLinks() {
     const coord = coordMap();
     linkSvg.innerHTML = "";
-    chemPairs().forEach(([a, b], i) => {
+    chemPairs().forEach(([a, b]) => {
       const A = coord[a], B = coord[b];
+      const len = Math.hypot(B.x - A.x, B.y - A.y);
       const g = document.createElementNS(SVGNS, "g");
       g.setAttribute("class", "chem-link");
       g.dataset.a = a; g.dataset.b = b;
-
-      const len = Math.hypot(B.x - A.x, B.y - A.y);
-      const base = lineEl(A, B, "chem-link__base");
-      const glow = lineEl(A, B, "chem-link__glow");
-
-      // Moving light = a short bright dash that travels the segment via
-      // animated stroke-dashoffset. No distortion (it follows the line exactly),
-      // pure CSS, runs on the compositor. dash pattern uses the true length.
+      const line = lineEl(A, B, "chem-link__line");
       const flow = lineEl(A, B, "chem-link__flow");
       flow.style.setProperty("--len", len.toFixed(2));
-      flow.style.animationDelay = `${(i % 6) * -0.45}s`;
-
-      g.append(base, glow, flow);
+      g.append(line, flow);
       linkSvg.appendChild(g);
     });
   }
@@ -127,57 +109,70 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
     return ln;
   }
 
-  /* ---- hover behaviour: in chem mode, isolate a player's direct links ---- */
-  function onEnter(id) {
-    if (chemMode) {
-      const linked = new Set(byId[id]?.chem || []);
-      root.classList.add("chem-hover");
-      $$(".chem-link", linkSvg).forEach(g => {
-        const on = +g.dataset.a === id || +g.dataset.b === id;
-        g.classList.toggle("is-active", on);
-      });
-      $$(".pitch__player", root).forEach(n => {
-        const nid = +n.dataset.id;
-        n.classList.toggle("is-dim", nid !== id && !linked.has(nid));
-        n.classList.toggle("is-near", linked.has(nid));
-      });
-    } else if (!selectedId) {
-      highlightChem(id);
-    }
-  }
-
-  function onLeave() {
-    if (chemMode) {
-      root.classList.remove("chem-hover");
-      $$(".chem-link", linkSvg).forEach(g => g.classList.remove("is-active"));
-      $$(".pitch__player", root).forEach(n => n.classList.remove("is-dim", "is-near"));
-    } else if (!selectedId) {
-      drawLinks();
-    }
-  }
-
-  // legacy single-player highlight (used when NOT in chem mode, e.g. selection)
-  function highlightChem(id) {
-    const coord = coordMap();
+  /* show ONLY this player's links; hide all others */
+  function activateLinks(id) {
     $$(".chem-link", linkSvg).forEach(g => {
-      const on = +g.dataset.a === id || +g.dataset.b === id;
-      g.classList.toggle("is-active", on);
+      g.classList.toggle("is-active", +g.dataset.a === id || +g.dataset.b === id);
     });
   }
+  function clearLinks() {
+    $$(".chem-link", linkSvg).forEach(g => g.classList.remove("is-active"));
+  }
 
-  /* ---- selection (unchanged behaviour) ---- */
-  function applySelection(id, fire = true) {
+  /* mark teammates connected to id (and dim the rest) */
+  function markLinked(id) {
     const linked = new Set(byId[id]?.chem || []);
-    root.classList.add("has-selection");
     $$(".pitch__player", root).forEach(n => {
       const nid = +n.dataset.id;
-      n.classList.toggle("is-selected", nid === id);
       n.classList.toggle("is-linked", linked.has(nid));
+      n.classList.toggle("is-dim", chemMode && nid !== id && !linked.has(nid));
     });
-    if (!chemMode) highlightChem(id);
+  }
+  function clearMarks() {
+    $$(".pitch__player", root).forEach(n => n.classList.remove("is-linked", "is-dim"));
+  }
+
+  /* ---------- hover (chemistry preview, only in chem mode, only when nothing selected) ---------- */
+  function onEnter(id) {
+    if (passMode || !chemMode || selectedId != null) return;
+    root.classList.add("chem-hover");
+    activateLinks(id);
+    markLinked(id);
+  }
+  function onLeave() {
+    if (passMode || selectedId != null) return;
+    root.classList.remove("chem-hover");
+    clearLinks();
+    clearMarks();
+  }
+
+  /* ---------- click = select / toggle-off ---------- */
+  function onClickPlayer(id) {
+    if (passMode) return;
+    if (selectedId === id) { deselect(); return; }   // click again to clear
+    selectedId = id;
+    applySelection(id);
+    onSelect?.(id);
+  }
+
+  function applySelection(id) {
+    root.classList.remove("chem-hover");
+    root.classList.add("has-selection");
+    $$(".pitch__player", root).forEach(n => n.classList.toggle("is-selected", +n.dataset.id === id));
+    markLinked(id);
+    if (chemMode) activateLinks(id); else clearLinks();
     showTip(id);
   }
 
+  function deselect() {
+    selectedId = null;
+    root.classList.remove("has-selection", "show-tip", "chem-hover");
+    $$(".pitch__player", root).forEach(n => n.classList.remove("is-selected"));
+    clearMarks();
+    clearLinks();
+  }
+
+  /* ---------- tooltip (smart flip so it never covers a nearby label) ---------- */
   function showTip(id) {
     const p = byId[id];
     const spot = formations[current].find(s => s.id === id);
@@ -189,62 +184,193 @@ export function mountPitch(root, { formation = "4-3-3", onSelect } = {}) {
       <span class="pitch__tip-num">#${p.number}</span>`;
     tip.style.left = `${spot.x}%`;
     tip.style.top = `${spot.y}%`;
-    tip.classList.toggle("is-below", spot.y < 22);
     tip.dataset.group = p.posGroup;
+
+    // Decide above vs below: default above, but flip below if it'd cover a
+    // nearby player label or run off the top edge.
+    const others = formations[current].filter(s => s.id !== id);
+    const coversAbove = spot.y < 26 ||                         // near top edge
+      others.some(s => Math.abs(s.x - spot.x) < 17 && s.y < spot.y && spot.y - s.y < 22);
+    tip.classList.toggle("is-below", coversAbove);
     root.classList.add("show-tip");
   }
 
-  function select(id) {
-    selectedId = id;
-    applySelection(id);
-    onSelect?.(id);
-  }
-
-  /* ---- Chemistry Mode toggle ---- */
+  /* ---------- Chemistry Mode ---------- */
   function setChemMode(on) {
     chemMode = on;
     root.classList.toggle("chem-mode", on);
-    if (!on) { setPassMode(false); onLeave(); }
+    if (!on) {                       // leaving chem mode clears everything chem-related
+      setPassMode(false);
+      deselect();
+    }
     return chemMode;
   }
 
-  /* ---- Passing Mode: a ball loops through the team along the links ----
-     Build one continuous polyline path through the present players (a simple
-     tour), set it as the ball's offset-path, and let CSS animate offset-distance.
-     Pure compositor animation — no rAF, no canvas. */
-  function buildTourPath() {
-    const coord = coordMap();
-    const rect = root.getBoundingClientRect();
-    const w = rect.width || 1, h = rect.height || 1;
-    // a gentle tour through every present player, in formation order, looped
-    const pts = formations[current].map(s => coord[s.id]).filter(Boolean);
-    if (pts.length < 2) return "";
-    const all = [...pts, pts[0]]; // close the loop for a seamless cycle
-    // offset-path path() is in px relative to the element's box → convert % → px
-    return "M " + all.map(p => `${(p.x / 100 * w).toFixed(1)} ${(p.y / 100 * h).toFixed(1)}`).join(" L ");
+  /* ====================================================================
+     PASSING MODE — JS-driven ball that passes between players on curves.
+     ==================================================================== */
+  let passRAF = null, pass = null, trail = [], lastTrail = 0, lastT = 0;
+  const TRAIL_LIFE = 520, TRAIL_GAP = 38, TRAIL_POOL = 16;
+
+  function presentPlayers() {
+    return formations[current].map(s => ({ id: s.id, x: s.x, y: s.y }));
   }
 
-  function startPassing() {
-    const d = buildTourPath();
-    if (!d) return;
-    ball.style.offsetPath = `path('${d}')`;
-    ball.style.webkitOffsetPath = `path('${d}')`;
-    root.classList.add("pass-on");
+  function buildTrailPool() {
+    trailLayer.innerHTML = "";
+    trail = [];
+    for (let i = 0; i < TRAIL_POOL; i++) {
+      const d = el("span.pitch__trail-dot");
+      trailLayer.appendChild(d);
+      trail.push({ el: d, born: -1e9 });
+    }
+  }
+
+  function pickNext(fromId, prevId) {
+    const present = new Set(formations[current].map(s => s.id));
+    // prefer a tactical pass to a chemistry-connected teammate that's present
+    let pool = (byId[fromId]?.chem || []).filter(cid => present.has(cid) && cid !== prevId);
+    if (!pool.length) pool = [...present].filter(cid => cid !== fromId && cid !== prevId);
+    if (!pool.length) pool = [...present].filter(cid => cid !== fromId);
+    // deterministic-ish variety without Math.random in a way that feels organic
+    return pool[(passSeed++ * 7) % pool.length];
+  }
+  let passSeed = 3;
+
+  function newPass(fromId, prevId) {
+    const coord = coordMap();
+    const toId = pickNext(fromId, prevId);
+    const A = coord[fromId], B = coord[toId];
+    const dist = Math.hypot(B.x - A.x, B.y - A.y);
+    // perpendicular control point → gentle curve; side alternates for variety
+    const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
+    const nx = -(B.y - A.y), ny = (B.x - A.x);
+    const nlen = Math.hypot(nx, ny) || 1;
+    const side = (passSeed % 2) ? 1 : -1;
+    const bow = Math.min(18, dist * 0.22) * side;
+    const cx = mx + (nx / nlen) * bow, cy = my + (ny / nlen) * bow;
+    return {
+      fromId, toId, A, B, C: { x: cx, y: cy },
+      start: lastT, dur: 760 + dist * 9, dwell: 280, phase: "travel",
+    };
+  }
+
+  const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const bezier = (A, C, B, t) => {
+    const u = 1 - t;
+    return {
+      x: u * u * A.x + 2 * u * t * C.x + t * t * B.x,
+      y: u * u * A.y + 2 * u * t * C.y + t * t * B.y,
+    };
+  };
+
+  function setBall(xPct, yPct) {
+    ball.style.left = `${xPct}%`;
+    ball.style.top = `${yPct}%`;
+  }
+
+  function spawnTrail(xPct, yPct, now) {
+    // reuse the oldest dot
+    let oldest = trail[0];
+    for (const d of trail) if (d.born < oldest.born) oldest = d;
+    oldest.born = now;
+    oldest.el.style.left = `${xPct}%`;
+    oldest.el.style.top = `${yPct}%`;
+    oldest.el.style.opacity = "0.5";
+  }
+
+  function fadeTrail(now) {
+    for (const d of trail) {
+      const age = now - d.born;
+      d.el.style.opacity = age > TRAIL_LIFE ? "0" : String(0.5 * (1 - age / TRAIL_LIFE));
+    }
+  }
+
+  function passTick(now) {
+    if (!passMode) return;
+    lastT = now;
+    if (!pass) { passRAF = requestAnimationFrame(passTick); return; }
+
+    if (pass.phase === "travel") {
+      const t = Math.min((now - pass.start) / pass.dur, 1);
+      const e = easeInOut(t);
+      const pos = bezier(pass.A, pass.C, pass.B, e);
+      setBall(pos.x, pos.y);
+      if (now - lastTrail > TRAIL_GAP) { spawnTrail(pos.x, pos.y, now); lastTrail = now; }
+      if (t >= 1) {
+        glowReceiver(pass.toId);
+        pass.phase = "dwell"; pass.dwellStart = now;
+      }
+    } else { // dwell briefly at the receiver, then pass on
+      if (now - pass.dwellStart >= pass.dwell) {
+        pass = newPass(pass.toId, pass.fromId);
+      }
+    }
+
+    fadeTrail(now);
+    passRAF = requestAnimationFrame(passTick);
+  }
+
+  function glowReceiver(id) {
+    const node = $(`.pitch__player[data-id="${id}"]`, root);
+    if (!node) return;
+    node.classList.add("is-receiving");
+    setTimeout(() => node.classList.remove("is-receiving"), 600);
+  }
+
+  function restartPassing() {
+    stopPassingLoop();
+    buildTrailPool();
+    const players = presentPlayers();
+    if (players.length < 2) return;
+    const startId = (formations[current].find(s => byId[s.id].posGroup !== "GK") || players[0]).id;
+    const coord = coordMap();
+    setBall(coord[startId].x, coord[startId].y);
+    lastT = performance.now();
+    pass = newPass(startId, null);
+    pass.start = lastT;
+    passRAF = requestAnimationFrame(passTick);
+  }
+
+  function stopPassingLoop() {
+    if (passRAF) cancelAnimationFrame(passRAF);
+    passRAF = null; pass = null;
+    trailLayer.innerHTML = ""; trail = [];
   }
 
   function setPassMode(on) {
-    passMode = on && chemMode;       // passing only makes sense with chemistry on
-    if (passMode) startPassing();
-    else root.classList.remove("pass-on");
+    passMode = on && chemMode;          // passing is a sub-mode of chemistry
+    root.classList.toggle("pass-mode", passMode);
+    if (passMode) {
+      // isolate: clear every chemistry/selection visual
+      root.classList.remove("chem-hover");
+      clearLinks(); clearMarks();
+      $$(".pitch__player", root).forEach(n => n.classList.remove("is-receiving"));
+      restartPassing();
+    } else {
+      stopPassingLoop();
+      // restore chem visuals if a player is still selected
+      if (selectedId != null) applySelection(selectedId);
+    }
     return passMode;
   }
 
+  /* ---------- pause the rAF loop when the pitch scrolls off-screen (perf) ---------- */
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!passMode) return;
+        if (e.isIntersecting && !passRAF) { lastT = performance.now(); passRAF = requestAnimationFrame(passTick); }
+        else if (!e.isIntersecting && passRAF) { cancelAnimationFrame(passRAF); passRAF = null; }
+      });
+    }, { threshold: 0.1 }).observe(root);
+  }
+  // clicking empty pitch space deselects
+  root.addEventListener("click", () => { if (!passMode) deselect(); });
+
   place(current);
   return {
-    place,
-    select,
-    setChemMode,
-    setPassMode,
+    place, select: onClickPlayer, setChemMode, setPassMode,
     get chemMode() { return chemMode; },
     get passMode() { return passMode; },
     get selectedId() { return selectedId; },

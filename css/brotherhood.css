@@ -48,10 +48,11 @@
 .pitch__player:hover .pp-dot{transform:scale(1.16) translateY(-3px);box-shadow:0 12px 26px rgba(0,0,0,.6),0 0 0 3px var(--tk)}
 .pitch__player:hover .pp-glow{opacity:.7}
 
-/* selection: glow the chosen, fade the rest */
-.pitch.has-selection .pitch__player{opacity:.34;filter:saturate(.55)}
-.pitch.has-selection .pitch__player.is-linked{opacity:.72;filter:none}
-.pitch.has-selection .pitch__player.is-selected{opacity:1;filter:none;z-index:5}
+/* selection: dim the rest ONLY in chemistry mode (so the focus reads); outside
+   chem mode a selection just glows the chosen player + shows the tooltip */
+.pitch.chem-mode.has-selection .pitch__player{opacity:.34;filter:saturate(.55)}
+.pitch.chem-mode.has-selection .pitch__player.is-linked{opacity:.72;filter:none}
+.pitch.chem-mode.has-selection .pitch__player.is-selected{opacity:1;filter:none}
 .pitch__player.is-selected .pp-dot{transform:scale(1.28);
   box-shadow:0 0 0 3px #fff,0 0 0 6px var(--tk),0 0 28px var(--tk)}
 .pitch__player.is-selected .pp-glow{opacity:1;animation:tokenPulse 1.8s var(--ease-out) infinite}
@@ -59,7 +60,7 @@
 @keyframes tokenPulse{0%{transform:scale(1);opacity:.9}70%{transform:scale(1.7);opacity:0}100%{opacity:0}}
 
 /* ---------- MINIMAL TOOLTIP (name · position · number only) ---------- */
-.pitch__tip{position:absolute;z-index:6;transform:translate(-50%,calc(-100% - 34px));
+.pitch__tip{position:absolute;z-index:7;transform:translate(-50%,calc(-100% - 40px));
   pointer-events:none;opacity:0;text-align:center;white-space:nowrap;
   padding:10px 16px;border-radius:14px;background:rgba(8,10,18,.92);backdrop-filter:blur(10px);
   border:1px solid var(--border-glass);box-shadow:0 14px 34px rgba(0,0,0,.5);
