@@ -5,21 +5,36 @@
    Lightweight: no JS beyond the shared .reveal observer.
    ==================================================================== */
 
-.origins{position:relative;max-width:980px;margin:0 auto;padding:10px 0;list-style:none}
+.origins{position:relative;max-width:1040px;margin:0 auto;padding:10px 0;list-style:none}
 
-/* central spine */
-.origins::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;transform:translateX(-50%);
-  background:linear-gradient(180deg,transparent,var(--crimson) 10%,var(--gold) 90%,transparent)}
+/* ONE continuous, perfectly straight line for the WHOLE timeline.
+   The row grid is symmetric (1fr | rail | 1fr) so the list's 50% lands dead
+   centre of every rail — the single line threads through all of them with no
+   breaks. */
+.origins::before{content:"";position:absolute;top:6px;bottom:6px;left:50%;width:2px;transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent,var(--crimson) 6%,var(--gold) 94%,transparent)}
 
-.origin{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;
+/* Three explicit columns per row:  image | timeline rail | content. */
+.origin{position:relative;display:grid;
+  grid-template-columns:1fr clamp(104px,12vw,140px) 1fr;
+  column-gap:clamp(18px,2.5vw,34px);align-items:center;
   margin-bottom:clamp(48px,7vw,88px)}
 .origin:last-child{margin-bottom:0}
 
-/* which column the media sits in (alternating) */
-.origin--left  .origin__media{grid-column:1}
-.origin--left  .origin__body {grid-column:2;text-align:left}
-.origin--right .origin__media{grid-column:2}
+/* default (image left, content right) */
+.origin__media{grid-column:1}
+.origin__rail {grid-column:2}
+.origin__body {grid-column:3;text-align:left}
+
+/* alternating row: image right, content left */
+.origin--right .origin__media{grid-column:3}
 .origin--right .origin__body {grid-column:1;text-align:right}
+/* rail always stays in the middle column */
+.origin--right .origin__rail {grid-column:2}
+
+/* ---- timeline rail: holds the node + year, sitting ON the single line ---- */
+.origin__rail{position:relative;z-index:1;align-self:center;
+  display:flex;flex-direction:column;align-items:center;gap:10px}
 
 /* ---- media: authentic photo with subtle documentary grade ---- */
 .origin__media{position:relative;border-radius:var(--radius);overflow:hidden;
@@ -35,18 +50,25 @@
   background:radial-gradient(120% 100% at 50% 50%,transparent 55%,rgba(4,5,10,.45))}
 
 /* ---- text block ---- */
-.origin__year{display:inline-block;font-family:var(--font-display);font-weight:700;
-  font-size:clamp(1.1rem,2.4vw,1.5rem);letter-spacing:.02em;
-  background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
 .origin__title{font-family:var(--font-display);font-size:clamp(1.3rem,3vw,1.9rem);line-height:1.05;
   letter-spacing:-.01em;margin-bottom:12px;color:#fff}
 .origin__text{color:var(--text-muted);font-size:clamp(1rem,1.8vw,1.12rem);line-height:1.7;max-width:42ch}
 .origin--right .origin__text{margin-left:auto}
 
-/* ---- node on the spine ---- */
-.origin__node{position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;
-  transform:translate(-50%,-50%);background:var(--crimson);z-index:2;
-  box-shadow:0 0 0 4px rgba(255,61,88,.18),0 0 18px var(--crimson)}
+/* ---- year / chapter chip: solid background masks the line so text never
+   overlaps it; padded pill keeps the single line readable behind. ---- */
+.origin__year{font-family:var(--font-display);font-weight:700;
+  font-size:clamp(.82rem,1.4vw,1rem);letter-spacing:.02em;line-height:1.15;text-align:center;
+  background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent;
+  /* the chip body: opaque dark plate behind the gradient text to cover the line */
+  position:relative;padding:6px 10px;border-radius:10px;max-width:120px}
+.origin__year::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:10px;
+  background:var(--bg-900,#04050a);border:1px solid var(--border-glass)}
+
+/* ---- node on the line ---- */
+.origin__node{position:relative;width:16px;height:16px;border-radius:50%;flex:0 0 auto;
+  background:var(--crimson);z-index:2;
+  box-shadow:0 0 0 5px var(--bg-900,#04050a),0 0 0 7px rgba(255,61,88,.18),0 0 18px var(--crimson)}
 .origin__node::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--crimson);
   animation:originPing 2.6s var(--ease-out) infinite}
 @keyframes originPing{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.6);opacity:0}}
@@ -57,15 +79,20 @@
 .origin--right.reveal{transform:translateX(36px)}
 .origin.reveal.is-in{opacity:1;transform:none}
 
-/* ---- mobile: single column, media stacked above text, spine to the left ---- */
+/* ---- mobile: single continuous line as a LEFT gutter; content stacks right ---- */
 @media (max-width:760px){
-  .origins{max-width:560px}
-  .origins::before{left:14px}
-  .origin{grid-template-columns:1fr;gap:16px;padding-left:42px;margin-bottom:44px}
-  .origin--left .origin__media,.origin--right .origin__media,
-  .origin--left .origin__body,.origin--right .origin__body{grid-column:1;text-align:left}
+  .origins{max-width:600px;padding-left:6px}
+  /* move the single line from centre to a fixed left gutter */
+  .origins::before{left:22px}
+  .origin{grid-template-columns:44px 1fr;column-gap:16px;row-gap:12px;align-items:start;margin-bottom:40px}
+  /* rail = left gutter (line passes behind it); media + body share the right column */
+  .origin__rail,.origin--right .origin__rail{grid-column:1;grid-row:1 / span 2;
+    align-self:start;justify-content:flex-start;padding-top:4px}
+  .origin__media,.origin--right .origin__media{grid-column:2;grid-row:1}
+  .origin__body,.origin--right .origin__body{grid-column:2;grid-row:2;text-align:left}
   .origin--right .origin__text{margin-left:0}
-  .origin__node{left:14px;top:24px}
+  .origin__text{max-width:none}
+  .origin__year{font-size:.7rem;padding:4px 6px;max-width:48px}
   .origin--left.reveal,.origin--right.reveal{transform:translateY(28px)}
 }
 
