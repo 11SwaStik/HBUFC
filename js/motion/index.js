@@ -8,6 +8,8 @@ export function initMotion() {
     // Fallback: reveal everything immediately, no smooth scroll.
     $$(".reveal").forEach(n => n.classList.add("is-in"));
     $$(".pcard").forEach(n => n.classList.add("is-in"));
+    $$(".line").forEach(n => { n.style.opacity = 1; n.style.transform = "none"; });
+    $$("[data-count]").forEach(n => { n.textContent = n.dataset.count; });
     return;
   }
   const gsap = window.gsap;
@@ -16,6 +18,32 @@ export function initMotion() {
   reveals(gsap);
   counters(gsap);
   cardInView(gsap);
+  storyLines(gsap);
+  parallaxLayers(gsap);
+}
+
+/* ---- Scroll-storytelling: reveal lines one at a time as they scroll in ---- */
+function storyLines(gsap) {
+  $$("[data-lines]").forEach(container => {
+    const lines = $$(".line", container);
+    gsap.set(lines, { y: 28, opacity: 0 });
+    window.ScrollTrigger.batch(lines, {
+      start: "top 82%",
+      onEnter: (els) => gsap.to(els, { y: 0, opacity: 1, duration: 0.9, stagger: 0.18, ease: "power3.out" }),
+    });
+  });
+}
+
+/* ---- Gentle parallax on elements tagged data-parallax="<speed>" ---- */
+function parallaxLayers(gsap) {
+  $$("[data-parallax]").forEach(el => {
+    const speed = parseFloat(el.dataset.parallax) || 0.2;
+    gsap.to(el, {
+      yPercent: -speed * 100,
+      ease: "none",
+      scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
+    });
+  });
 }
 
 /* ---- Lenis smooth scroll, synced to GSAP ticker (single rAF loop) ---- */

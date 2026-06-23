@@ -7,6 +7,9 @@ import { club } from "./data/club.js";
 import { players, byId } from "./data/squad.js";
 import { PlayerCard } from "./components/PlayerCard.js";
 import { mountPitch, chemistryScore } from "./components/Pitch.js";
+import { renderValues } from "./components/Values.js";
+import { renderJourney } from "./components/Journey.js";
+import { renderImpact } from "./components/Impact.js";
 import { initMotion } from "./motion/index.js";
 import { setupCardTilt } from "./motion/cardTilt.js";
 
@@ -113,6 +116,9 @@ function mouseLight() {
 document.addEventListener("DOMContentLoaded", () => {
   renderSquad();
   renderPitch();
+  renderValues($("#valuesGrid"));
+  renderJourney($("#journeyList"));
+  renderImpact($("#impactGrid"));
 
   typeSlogan();
   spawnParticles();
